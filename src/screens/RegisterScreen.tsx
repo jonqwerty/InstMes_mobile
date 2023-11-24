@@ -1,14 +1,164 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {FC, useState} from 'react';
+import LinearGradient from 'react-native-linear-gradient';
 
-const RegisterScreen = () => {
+import {
+  COLORS,
+  FONT_FAMILY,
+  FONT_SIZE,
+  HEIGHT_INPUT_AND_BUTTON,
+  PADDING_HORIZONTAL,
+} from '../theme/theme';
+import IconLogoPinkSnail from '../icons/IconLogoPinkSnail';
+import IconUser from '../icons/IconUser';
+import IconEnvelope from '../icons/IconEnvelope';
+import IconLock from '../icons/IconLock';
+
+const RegisterScreen: FC = () => {
+  const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+
   return (
-    <View>
-      <Text>RegisterScreen</Text>
-    </View>
-  )
-}
+    <LinearGradient
+      colors={[COLORS.primaryPurpleHex, COLORS.primaryPinkHex]}
+      style={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        style={styles.style1}
+        showsVerticalScrollIndicator={false}>
+        <IconLogoPinkSnail
+          stroke={COLORS.primaryBlackHex}
+          fill={COLORS.primaryPinkHex}
+        />
 
-export default RegisterScreen
+        <Text style={styles.titleText}>PinkSnail</Text>
 
-const styles = StyleSheet.create({})
+        <View style={styles.inputContainer}>
+          <IconUser fill={COLORS.primaryWhiteHex} />
+
+          <TextInput
+            style={styles.input}
+            value={name}
+            onChangeText={text => setName(text)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <IconEnvelope fill={COLORS.primaryWhiteHex} />
+
+          <TextInput
+            style={styles.input}
+            value={email}
+            onChangeText={text => setEmail(text)}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <IconLock fill={COLORS.primaryWhiteHex} />
+
+          <TextInput
+            style={styles.input}
+            value={password}
+            onChangeText={text => setPassword(text)}
+          />
+        </View>
+
+        <TouchableOpacity style={styles.btn}>
+          <Text style={styles.btnText}>Sign up</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.haveAccountText}>
+          Already have an account?{' '}
+          <Text style={styles.signInText}>Sign in</Text>
+        </Text>
+      </ScrollView>
+    </LinearGradient>
+  );
+};
+
+export default RegisterScreen;
+
+const styles = StyleSheet.create({
+  container: {flex: 1},
+  scroll: {flexGrow: 1, alignItems: 'center'},
+  style1: {padding: PADDING_HORIZONTAL},
+  titleText: {
+    fontFamily: FONT_FAMILY.lato_black,
+    color: COLORS.primaryWhiteHex,
+    lineHeight: 32,
+    fontSize: FONT_SIZE.size_30,
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  inputContainer: {
+    paddingHorizontal: 10,
+    flexDirection: 'row',
+    width: '100%',
+    height: HEIGHT_INPUT_AND_BUTTON,
+    borderWidth: 2,
+    borderColor: COLORS.primaryWhiteHex,
+    borderRadius: 10,
+
+    alignItems: 'center',
+
+    marginTop: 30,
+  },
+  input: {
+    flex: 1,
+    marginLeft: 10,
+    fontFamily: FONT_FAMILY.lato_regular,
+    color: COLORS.primaryWhiteHex,
+    lineHeight: 26,
+    fontSize: FONT_SIZE.size_24,
+  },
+  forgotPasswordText: {
+    fontFamily: FONT_FAMILY.lato_regular,
+    color: COLORS.primaryWhiteHex,
+    lineHeight: 24,
+    fontSize: FONT_SIZE.size_14,
+
+    alignSelf: 'flex-end',
+    marginTop: 60,
+  },
+
+  btn: {
+    width: '100%',
+    height: HEIGHT_INPUT_AND_BUTTON,
+    backgroundColor: COLORS.primaryWhiteHex,
+    borderRadius: 10,
+    marginTop: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  btnText: {
+    fontFamily: FONT_FAMILY.lato_bold,
+    color: COLORS.primaryPurpleHex,
+    lineHeight: 26,
+    fontSize: FONT_SIZE.size_24,
+  },
+
+  haveAccountText: {
+    fontFamily: FONT_FAMILY.lato_regular,
+    color: COLORS.primaryWhiteHex,
+    lineHeight: 16,
+    fontSize: FONT_SIZE.size_14,
+
+    marginTop: 'auto',
+  },
+
+  signInText: {
+    fontFamily: FONT_FAMILY.lato_bold,
+    color: COLORS.primaryPurpleHex,
+    lineHeight: 18,
+    fontSize: FONT_SIZE.size_16,
+  },
+});

@@ -1,3 +1,18 @@
+import {Dimensions} from 'react-native';
+
+export const SCREEN_DIMENSIONS = Dimensions.get('screen');
+export const WINDOW_DIMENSIONS = Dimensions.get('window');
+
+export const SCREEN_WIDTH = SCREEN_DIMENSIONS.width;
+export const SCREEN_HEIGHT = SCREEN_DIMENSIONS.height;
+
+export const WINDOW_WIDTH = WINDOW_DIMENSIONS.width;
+export const WINDOW_HEIGHT = WINDOW_DIMENSIONS.height;
+
+export const PADDING_HORIZONTAL: number = WINDOW_WIDTH < 400 ? 20 : 40;
+
+export const HEIGHT_INPUT_AND_BUTTON = 48;
+
 interface Spacing {
   space_2: number;
   space_4: number;
@@ -33,6 +48,8 @@ export const SPACING: Spacing = {
 };
 
 interface Color {
+  primaryPurpleHex: string;
+  primaryPinkHex: string;
   primaryRedHex: string;
   primaryOrangeHex: string;
   primaryBlackHex: string;
@@ -48,16 +65,19 @@ interface Color {
 }
 
 export const COLORS: Color = {
+  primaryPurpleHex: '#6B129D',
+  primaryPinkHex: '#FE5EFC',
+  primaryWhiteHex: '#FFFFFF',
+  primaryBlackHex: '#000000',
+
   primaryRedHex: '#DC3535',
   primaryOrangeHex: '#D17842',
-  primaryBlackHex: '#0C0F14',
   primaryDarkGreyHex: '#141921',
   secondaryDarkGreyHex: '#21262E',
   primaryGreyHex: '#252A32',
   secondaryGreyHex: '#252A32',
   primaryLightGreyHex: '#52555A',
   secondaryLightGreyHex: '#AEAEAE',
-  primaryWhiteHex: '#FFFFFF',
   primaryBlackRGBA: 'rgba(12,15,20,0.5)',
   secondaryBlackRGBA: 'rgba(0,0,0,0.7)',
 };
@@ -74,7 +94,7 @@ interface FontFamily {
   lato_thinItalic: string;
 }
 
-export const FONTFAMILY: FontFamily = {
+export const FONT_FAMILY: FontFamily = {
   lato_black: 'Lato-Black',
   lato_blackItalic: 'Lato-BlackItalic',
   lato_bold: 'Lato-Bold',
@@ -99,7 +119,7 @@ interface FontSize {
   size_30: number;
 }
 
-export const FONTSIZE: FontSize = {
+export const FONT_SIZE: FontSize = {
   size_8: 8,
   size_10: 10,
   size_12: 12,
@@ -121,7 +141,7 @@ interface BorderRadius {
   radius_25: number;
 }
 
-export const BORDERRADIUS: BorderRadius = {
+export const BORDER_RADIUS: BorderRadius = {
   radius_4: 4,
   radius_8: 8,
   radius_10: 10,
