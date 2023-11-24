@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import React, {FC, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
+import {useNavigation} from '@react-navigation/native';
 
 import {
   COLORS,
@@ -22,9 +23,14 @@ import IconEnvelope from '../icons/IconEnvelope';
 import IconLock from '../icons/IconLock';
 
 const RegisterScreen: FC = () => {
+  const navigation = useNavigation();
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+
+  const handleSignIn = () => {
+    navigation.navigate('Login', {});
+  };
 
   return (
     <LinearGradient
@@ -32,7 +38,7 @@ const RegisterScreen: FC = () => {
       style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.scroll}
-        style={styles.style1}
+        style={styles.wrapper}
         showsVerticalScrollIndicator={false}>
         <IconLogoPinkSnail
           stroke={COLORS.primaryBlackHex}
@@ -77,7 +83,9 @@ const RegisterScreen: FC = () => {
 
         <Text style={styles.haveAccountText}>
           Already have an account?{' '}
-          <Text style={styles.signInText}>Sign in</Text>
+          <Text style={styles.signInText} onPress={handleSignIn}>
+            Sign in
+          </Text>
         </Text>
       </ScrollView>
     </LinearGradient>
@@ -89,7 +97,7 @@ export default RegisterScreen;
 const styles = StyleSheet.create({
   container: {flex: 1},
   scroll: {flexGrow: 1, alignItems: 'center'},
-  style1: {padding: PADDING_HORIZONTAL},
+  wrapper: {padding: PADDING_HORIZONTAL},
   titleText: {
     fontFamily: FONT_FAMILY.lato_black,
     color: COLORS.primaryWhiteHex,
