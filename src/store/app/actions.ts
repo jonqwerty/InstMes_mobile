@@ -48,4 +48,6 @@ const logout = createAsyncThunk<{}, {}, IServices>(
   },
 );
 
-export {register, login, logout};
+const clearValidationError = createAction(ActionType.CLEAR_VALIDATION_ERROR);
+
+export {register, login, logout, clearValidationError};

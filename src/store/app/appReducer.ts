@@ -1,12 +1,13 @@
 import {createReducer, isAnyOf, SerializedError} from '@reduxjs/toolkit';
 
-import {login, logout, register} from './actions';
+import {clearValidationError, login, logout, register} from './actions';
 import {LoadingStatus} from '../../common/enums';
 
 export interface IAuthUser {
   _id: string;
   name: string;
   email: string;
+  token: string;
 }
 
 export interface IAuth {
@@ -33,11 +34,16 @@ const appReducer = createReducer(initialState, builder => {
       state.authUser = null;
     })
 
-    .addMatcher(isAnyOf(login.pending), state => {
+    .addCase(clearValidationError, state => {
+      state.validationError = null;
+      state.loading = LoadingStatus.IDLE;
+    })
+
+    .addMatcher(isAnyOf(register.pending), state => {
       state.loading = LoadingStatus.LOADING;
     })
 
-    .addMatcher(isAnyOf(login.rejected), (state, action) => {
+    .addMatcher(isAnyOf(register.rejected), (state, action) => {
       state.loading = LoadingStatus.FAILED;
       state.validationError = action.error;
     });

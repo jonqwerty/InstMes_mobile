@@ -1,4 +1,6 @@
 import {
+  ActivityIndicator,
+  Alert,
   ScrollView,
   StyleSheet,
   Text,
@@ -22,32 +24,67 @@ import IconUser from '../icons/IconUser';
 import IconEnvelope from '../icons/IconEnvelope';
 import IconLock from '../icons/IconLock';
 import {appActionCreator} from '../store/actions';
-import {useAppDispatch} from '../store/store';
+import {RootState, useAppDispatch} from '../store/store';
+import {useSelector} from 'react-redux';
+import {LoadingStatus} from '../common/enums';
 
 const RegisterScreen: FC = () => {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
+
+  const {authUser, validationError, loading} = useSelector(
+    (state: RootState) => state.app,
+  );
+
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (validationError) {
+      Alert.alert('Alert', `${validationError?.message || validationError}`, [
+        {
+          text: 'OK',
+          onPress: () => {
+            dispatch(appActionCreator.clearValidationError());
+          },
+        },
+      ]);
+    }
+  }, [validationError]);
+
+  useEffect(() => {
+    if (loading === LoadingStatus.SUCCEEDED) {
+      Alert.alert('Alert', `You successfully registered`, [
+        {
+          text: 'OK',
+          onPress: () => {
+            navigation.navigate('Chat', {});
+          },
+        },
+      ]);
+    }
+  }, [loading]);
 
   const handleSignIn = async () => {
-    // await dispatch(
-    //   appActionCreator.register({
-    //     name: 'roko',
-    //     email: 'aaa@gmail.com',
-    //     password: 'Qa111111!',
-    //   }),
-    // );
-    // navigation.navigate('Chat', {});
+    await dispatch(
+      appActionCreator.register({
+        name: name,
+        email: email,
+        password: password,
+      }),
+    );
   };
 
   return (
     <LinearGradient
       colors={[COLORS.primaryPurpleHex, COLORS.primaryPinkHex]}
       style={styles.container}>
+      {loading === LoadingStatus.LOADING && (
+        <View style={styles.loader}>
+          <ActivityIndicator size="large" color="#00ff00" />
+        </View>
+      )}
       <ScrollView
         contentContainerStyle={styles.scroll}
         style={styles.wrapper}
@@ -178,5 +215,14 @@ const styles = StyleSheet.create({
     color: COLORS.primaryPurpleHex,
     lineHeight: 18,
     fontSize: FONT_SIZE.size_16,
+  },
+  loader: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
