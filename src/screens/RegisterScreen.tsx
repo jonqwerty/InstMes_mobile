@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 
@@ -21,15 +21,27 @@ import IconLogoPinkSnail from '../icons/IconLogoPinkSnail';
 import IconUser from '../icons/IconUser';
 import IconEnvelope from '../icons/IconEnvelope';
 import IconLock from '../icons/IconLock';
+import {appActionCreator} from '../store/actions';
+import {useAppDispatch} from '../store/store';
 
 const RegisterScreen: FC = () => {
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const handleSignIn = () => {
-    navigation.navigate('Login', {});
+  useEffect(() => {}, []);
+
+  const handleSignIn = async () => {
+    // await dispatch(
+    //   appActionCreator.register({
+    //     name: 'roko',
+    //     email: 'aaa@gmail.com',
+    //     password: 'Qa111111!',
+    //   }),
+    // );
+    // navigation.navigate('Chat', {});
   };
 
   return (
@@ -77,15 +89,13 @@ const RegisterScreen: FC = () => {
           />
         </View>
 
-        <TouchableOpacity style={styles.btn}>
+        <TouchableOpacity style={styles.btn} onPress={handleSignIn}>
           <Text style={styles.btnText}>Sign up</Text>
         </TouchableOpacity>
 
         <Text style={styles.haveAccountText}>
           Already have an account?{' '}
-          <Text style={styles.signInText} onPress={handleSignIn}>
-            Sign in
-          </Text>
+          <Text style={styles.signInText}>Sign in</Text>
         </Text>
       </ScrollView>
     </LinearGradient>
