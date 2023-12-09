@@ -1,6 +1,12 @@
 import {createReducer, isAnyOf, SerializedError} from '@reduxjs/toolkit';
 
-import {clearValidationError, login, logout, register} from './actions';
+import {
+  clearValidationError,
+  login,
+  logout,
+  register,
+  resetLoadingState,
+} from './actions';
 import {LoadingStatus} from '../../common/enums';
 
 export interface IAuthUser {
@@ -36,6 +42,9 @@ const appReducer = createReducer(initialState, builder => {
 
     .addCase(clearValidationError, state => {
       state.validationError = null;
+    })
+
+    .addCase(resetLoadingState, state => {
       state.loading = LoadingStatus.IDLE;
     })
 

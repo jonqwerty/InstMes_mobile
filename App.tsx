@@ -3,14 +3,17 @@ import React from 'react';
 import {Provider} from 'react-redux';
 
 import Navigation from './src/navigation/Navigation';
-import store from './src/store/store';
+import {store, persistor} from './src/store/store';
+import {PersistGate} from 'redux-persist/integration/react';
 
 const App = () => {
   return (
     <Provider store={store}>
-      <View style={styles.container}>
-        <Navigation />
-      </View>
+      <PersistGate loading={null} persistor={persistor}>
+        <View style={styles.container}>
+          <Navigation />
+        </View>
+      </PersistGate>
     </Provider>
   );
 };

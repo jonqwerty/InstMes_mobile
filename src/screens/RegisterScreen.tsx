@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   Alert,
+  BackHandler,
   ScrollView,
   StyleSheet,
   Text,
@@ -59,7 +60,7 @@ const RegisterScreen: FC = () => {
         {
           text: 'OK',
           onPress: () => {
-            navigation.navigate('Chat', {});
+            dispatch(appActionCreator.resetLoadingState());
           },
         },
       ]);
