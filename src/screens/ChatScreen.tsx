@@ -8,16 +8,18 @@ import {
 } from 'react-native';
 import React, {FC, useCallback, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {RootState, useAppDispatch} from '../store/store';
 import {useSelector} from 'react-redux';
+import {StackNavigationProp} from '@react-navigation/stack';
+
+import {RootState, useAppDispatch} from '../store/store';
 import storageMMKV from '../mmkv/storageMMKV';
-import {StorageKey} from '../common/enums';
+import {RootStackParamList, StorageKey} from '../common/enums';
 import {COLORS, PADDING_HORIZONTAL} from '../theme/theme';
 import IconExit from '../icons/IconExit';
 import {appActionCreator} from '../store/actions';
 
 const ChatScreen: FC = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
 
   const {authUser, validationError, loading} = useSelector(
@@ -47,14 +49,15 @@ const ChatScreen: FC = () => {
       BackHandler.removeEventListener('hardwareBackPress', disableBackButton);
     };
   }, [disableBackButton]);
-  console.log(
-    '-->>',
-    JSON.parse(
-      storageMMKV.getString(StorageKey.AUTH_USER)
-        ? storageMMKV.getString(StorageKey.AUTH_USER)
-        : null,
-    ),
-  );
+
+  // console.log(
+  //   '-->>',
+  //   JSON.parse(
+  //     storageMMKV.getString(StorageKey.AUTH_USER)
+  //       ? storageMMKV.getString(StorageKey.AUTH_USER)
+  //       : null,
+  //   ),
+  // );
 
   const handleLogout = () => {
     Alert.alert('Alert', `Are you sure you want to logout?`, [

@@ -9,9 +9,9 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 import IconLogoPinkSnail from '../icons/IconLogoPinkSnail';
-import IconUser from '../icons/IconUser';
 import IconLock from '../icons/IconLock';
 import {
   COLORS,
@@ -20,14 +20,28 @@ import {
   HEIGHT_INPUT_AND_BUTTON,
   PADDING_HORIZONTAL,
 } from '../theme/theme';
+import {useAppDispatch} from '../store/store';
+import {appActionCreator} from '../store/actions';
+import IconEnvelope from '../icons/IconEnvelope';
+import {RootStackParamList} from '../common/enums';
 
 const LoginScreen: FC = () => {
-  const navigation = useNavigation();
-  const [name, setName] = useState<string>('');
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const dispatch = useAppDispatch();
+  const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   const handleCreateAccount = () => {
     navigation.navigate('Register', {});
+  };
+
+  const handleLogin = async () => {
+    await dispatch(
+      appActionCreator.login({
+        email: email,
+        password: password,
+      }),
+    );
   };
 
   return (
@@ -46,12 +60,12 @@ const LoginScreen: FC = () => {
         <Text style={styles.titleText}>PinkSnail</Text>
 
         <View style={styles.inputContainer}>
-          <IconUser fill={COLORS.primaryWhiteHex} />
+          <IconEnvelope fill={COLORS.primaryWhiteHex} />
 
           <TextInput
             style={styles.input}
-            value={name}
-            onChangeText={text => setName(text)}
+            value={email}
+            onChangeText={text => setEmail(text)}
           />
         </View>
 
@@ -65,7 +79,7 @@ const LoginScreen: FC = () => {
           />
         </View>
 
-        <TouchableOpacity style={styles.loginBtn}>
+        <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
           <Text style={styles.btnText}>Login</Text>
         </TouchableOpacity>
 

@@ -1,7 +1,6 @@
 import {
   ActivityIndicator,
   Alert,
-  BackHandler,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,6 +11,8 @@ import {
 import React, {FC, useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 import {
   COLORS,
@@ -26,14 +27,13 @@ import IconEnvelope from '../icons/IconEnvelope';
 import IconLock from '../icons/IconLock';
 import {appActionCreator} from '../store/actions';
 import {RootState, useAppDispatch} from '../store/store';
-import {useSelector} from 'react-redux';
-import {LoadingStatus} from '../common/enums';
+import {LoadingStatus, RootStackParamList} from '../common/enums';
 
 const RegisterScreen: FC = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
 
-  const {authUser, validationError, loading} = useSelector(
+  const {validationError, loading} = useSelector(
     (state: RootState) => state.app,
   );
 
@@ -54,7 +54,14 @@ const RegisterScreen: FC = () => {
     }
   }, [validationError]);
 
-  useEffect(() => {
+  const handleSignUp = async () => {
+    await dispatch(
+      appActionCreator.register({
+        name: name,
+        email: email,
+        password: password,
+      }),
+    );
     if (loading === LoadingStatus.SUCCEEDED) {
       Alert.alert('Alert', `You successfully registered`, [
         {
@@ -65,17 +72,8 @@ const RegisterScreen: FC = () => {
         },
       ]);
     }
-  }, [loading]);
-
-  const handleSignUp = async () => {
-    await dispatch(
-      appActionCreator.register({
-        name: name,
-        email: email,
-        password: password,
-      }),
-    );
   };
+
   const handleSignIn = async () => {
     navigation.navigate('Login', {});
   };

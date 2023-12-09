@@ -35,6 +35,11 @@ const appReducer = createReducer(initialState, builder => {
       state.validationError = null;
       state.loading = LoadingStatus.SUCCEEDED;
     })
+    .addCase(login.fulfilled, (state, action) => {
+      state.authUser = action.payload;
+      state.validationError = null;
+      state.loading = LoadingStatus.SUCCEEDED;
+    })
 
     .addCase(logout.fulfilled, state => {
       state.authUser = null;
@@ -48,11 +53,11 @@ const appReducer = createReducer(initialState, builder => {
       state.loading = LoadingStatus.IDLE;
     })
 
-    .addMatcher(isAnyOf(register.pending), state => {
+    .addMatcher(isAnyOf(register.pending, login.pending), state => {
       state.loading = LoadingStatus.LOADING;
     })
 
-    .addMatcher(isAnyOf(register.rejected), (state, action) => {
+    .addMatcher(isAnyOf(register.rejected, login.rejected), (state, action) => {
       state.loading = LoadingStatus.FAILED;
       state.validationError = action.error;
     });

@@ -30,14 +30,13 @@ const register = createAsyncThunk<IAuthUser, IRegisterRequest, IServices>(
 );
 
 const login = createAsyncThunk<
-  {},
-  {name: string; email: string; password: string},
+  IAuthUser,
+  {email: string; password: string},
   IServices
 >(ActionType.LOG_IN, async (body, {extra: {services}}) => {
   const {data} = await services.app.login(body);
 
-  // storageMMKV.set(StorageKey.AUTH_USER, JSON.stringify(data));
-
+  storageMMKV.set(StorageKey.AUTH_USER, JSON.stringify(data));
   return data;
 });
 
