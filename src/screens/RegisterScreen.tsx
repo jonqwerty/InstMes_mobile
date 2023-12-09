@@ -67,7 +67,7 @@ const RegisterScreen: FC = () => {
     }
   }, [loading]);
 
-  const handleSignIn = async () => {
+  const handleSignUp = async () => {
     await dispatch(
       appActionCreator.register({
         name: name,
@@ -75,6 +75,9 @@ const RegisterScreen: FC = () => {
         password: password,
       }),
     );
+  };
+  const handleSignIn = async () => {
+    navigation.navigate('Login', {});
   };
 
   return (
@@ -127,11 +130,11 @@ const RegisterScreen: FC = () => {
           />
         </View>
 
-        <TouchableOpacity style={styles.btn} onPress={handleSignIn}>
+        <TouchableOpacity style={styles.btn} onPress={handleSignUp}>
           <Text style={styles.btnText}>Sign up</Text>
         </TouchableOpacity>
 
-        <Text style={styles.haveAccountText}>
+        <Text style={styles.haveAccountText} onPress={handleSignIn}>
           Already have an account?{' '}
           <Text style={styles.signInText}>Sign in</Text>
         </Text>

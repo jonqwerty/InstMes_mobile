@@ -44,7 +44,7 @@ const login = createAsyncThunk<
 const logout = createAsyncThunk<{}, {}, IServices>(
   ActionType.LOG_OUT,
   async (payload, {extra: {services}}) => {
-    // storageMMKV.deleteItem(StorageKey.AUTH_USER);
+    storageMMKV.deleteItem(StorageKey.AUTH_USER);
   },
 );
 

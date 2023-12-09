@@ -62,13 +62,17 @@ interface Color {
   primaryWhiteHex: string;
   primaryBlackRGBA: string;
   secondaryBlackRGBA: string;
+  primaryBlueHex: string;
+  secondPinkHex: string;
 }
 
 export const COLORS: Color = {
   primaryPurpleHex: '#6B129D',
   primaryPinkHex: '#FE5EFC',
+  secondPinkHex: '#F970FC',
   primaryWhiteHex: '#FFFFFF',
   primaryBlackHex: '#000000',
+  primaryBlueHex: '#9324CA',
 
   primaryRedHex: '#DC3535',
   primaryOrangeHex: '#D17842',
