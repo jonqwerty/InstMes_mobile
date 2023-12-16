@@ -2,6 +2,7 @@ import {createReducer, isAnyOf, SerializedError} from '@reduxjs/toolkit';
 
 import {
   clearValidationError,
+  getUserChats,
   login,
   logout,
   register,
@@ -16,16 +17,25 @@ export interface IAuthUser {
   token: string;
 }
 
+export interface IUserChatsResponse {
+  _id: string;
+  members: [string, string];
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface IAuth {
   authUser: IAuthUser | null;
   validationError: SerializedError | null;
   loading: string;
+  userChats: IUserChatsResponse[] | null;
 }
 
 const initialState: IAuth = {
   authUser: null,
   validationError: null,
   loading: LoadingStatus.IDLE,
+  userChats: null,
 };
 
 const appReducer = createReducer(initialState, builder => {
@@ -44,6 +54,11 @@ const appReducer = createReducer(initialState, builder => {
     .addCase(logout.fulfilled, state => {
       state.authUser = null;
     })
+    .addCase(getUserChats.fulfilled, (state, action) => {
+      state.userChats = action.payload;
+      state.validationError = null;
+      state.loading = LoadingStatus.SUCCEEDED;
+    })
 
     .addCase(clearValidationError, state => {
       state.validationError = null;
@@ -53,13 +68,19 @@ const appReducer = createReducer(initialState, builder => {
       state.loading = LoadingStatus.IDLE;
     })
 
-    .addMatcher(isAnyOf(register.pending, login.pending), state => {
-      state.loading = LoadingStatus.LOADING;
-    })
+    .addMatcher(
+      isAnyOf(register.pending, login.pending, getUserChats.pending),
+      state => {
+        state.loading = LoadingStatus.LOADING;
+      },
+    )
 
-    .addMatcher(isAnyOf(register.rejected, login.rejected), (state, action) => {
-      state.loading = LoadingStatus.FAILED;
-      state.validationError = action.error;
-    });
+    .addMatcher(
+      isAnyOf(register.rejected, login.rejected, getUserChats.rejected),
+      (state, action) => {
+        state.loading = LoadingStatus.FAILED;
+        state.validationError = action.error;
+      },
+    );
 });
 export default appReducer;

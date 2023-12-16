@@ -14,7 +14,12 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RootState, useAppDispatch} from '../store/store';
 import storageMMKV from '../mmkv/storageMMKV';
 import {RootStackParamList, StorageKey} from '../common/enums';
-import {COLORS, PADDING_HORIZONTAL} from '../theme/theme';
+import {
+  COLORS,
+  FONT_FAMILY,
+  FONT_SIZE,
+  PADDING_HORIZONTAL,
+} from '../theme/theme';
 import IconExit from '../icons/IconExit';
 import {appActionCreator} from '../store/actions';
 
@@ -22,7 +27,7 @@ const ChatScreen: FC = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
 
-  const {authUser, validationError, loading} = useSelector(
+  const {authUser, validationError, loading, userChats} = useSelector(
     (state: RootState) => state.app,
   );
 
@@ -49,6 +54,12 @@ const ChatScreen: FC = () => {
       BackHandler.removeEventListener('hardwareBackPress', disableBackButton);
     };
   }, [disableBackButton]);
+
+  useEffect(() => {
+    if (authUser?._id) {
+      dispatch(appActionCreator.getUserChats(authUser?._id));
+    }
+  }, []);
 
   // console.log(
   //   '-->>',
@@ -77,6 +88,7 @@ const ChatScreen: FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.top}>
+        <Text style={styles.logged}>Logged as {authUser?.name}</Text>
         <TouchableOpacity onPress={handleLogout}>
           <IconExit fill={COLORS.primaryWhiteHex} />
         </TouchableOpacity>
@@ -96,9 +108,16 @@ const styles = StyleSheet.create({
   },
   top: {
     height: 50,
-    justifyContent: 'center',
-    alignItems: 'flex-end',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: PADDING_HORIZONTAL,
     backgroundColor: COLORS.primaryBlueHex,
+  },
+  logged: {
+    fontFamily: FONT_FAMILY.lato_bold,
+    color: COLORS.primaryWhiteHex,
+    lineHeight: 16,
+    fontSize: FONT_SIZE.size_14,
   },
 });
