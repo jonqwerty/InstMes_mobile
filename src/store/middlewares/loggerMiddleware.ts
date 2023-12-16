@@ -1,7 +1,7 @@
 const loggerMiddleware = store => next => action => {
-  console.log('Dispatching:', action);
+  // console.log('Dispatching:', action);
   const result = next(action);
-  console.log('Next State:', store.getState());
+  // console.log('Next State:', store.getState());
   return result;
 };
 

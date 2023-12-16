@@ -56,6 +56,7 @@ export default UserChat;
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 4,
     borderWidth: 1,
     borderColor: COLORS.primaryBlackHex,
     padding: 5,
@@ -71,6 +72,6 @@ const styles = StyleSheet.create({
   img: {
     height: 35,
     width: 35,
-    marginRight:10
+    marginRight: 10,
   },
 });

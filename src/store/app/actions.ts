@@ -63,6 +63,23 @@ const getUser = createAsyncThunk<IUser, string, IServices>(
   },
 );
 
+const getUsers = createAsyncThunk<IUser[], {}, IServices>(
+  ActionType.GET_USERS,
+  async (userId, {extra: {services}}) => {
+    const {data} = await services.app.getUsers();
+    return data;
+  },
+);
+
+const createChat = createAsyncThunk<
+  {},
+  {firstId: string; secondId: string},
+  IServices
+>(ActionType.CREATE_CHAT, async (body, {extra: {services}}) => {
+  const {data} = await services.app.createChat(body);
+  return data;
+});
+
 const clearValidationError = createAction(ActionType.CLEAR_VALIDATION_ERROR);
 const resetLoadingState = createAction(ActionType.RESET_LOADING_STATE);
 
@@ -74,4 +91,6 @@ export {
   resetLoadingState,
   getUserChats,
   getUser,
+  getUsers,
+  createChat,
 };

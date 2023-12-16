@@ -24,7 +24,7 @@ export const HttpStatusCode = {
 };
 
 const ENV = {
-  API_PATH: 'http://192.168.0.5:5000/api/',
+  API_PATH: 'http://192.168.0.5:5000/api',
 };
 
 export const axiosApi = axios.create({

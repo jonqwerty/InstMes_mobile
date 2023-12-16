@@ -2,8 +2,10 @@ import {createReducer, isAnyOf, SerializedError} from '@reduxjs/toolkit';
 
 import {
   clearValidationError,
+  createChat,
   getUser,
   getUserChats,
+  getUsers,
   login,
   logout,
   register,
@@ -38,6 +40,7 @@ export interface IAuth {
   validationError: SerializedError | null;
   loading: string;
   userChats: IUserChatsResponse[] | null;
+  users: IUser[] | null;
 }
 
 const initialState: IAuth = {
@@ -45,6 +48,7 @@ const initialState: IAuth = {
   validationError: null,
   loading: LoadingStatus.IDLE,
   userChats: null,
+  users: null,
 };
 
 const appReducer = createReducer(initialState, builder => {
@@ -72,6 +76,16 @@ const appReducer = createReducer(initialState, builder => {
       state.validationError = null;
       state.loading = LoadingStatus.SUCCEEDED;
     })
+    .addCase(getUsers.fulfilled, (state, action) => {
+      state.users = action.payload;
+      state.validationError = null;
+      state.loading = LoadingStatus.SUCCEEDED;
+    })
+    .addCase(createChat.fulfilled, (state, action) => {
+      
+      state.validationError = null;
+      state.loading = LoadingStatus.SUCCEEDED;
+    })
 
     .addCase(clearValidationError, state => {
       state.validationError = null;
@@ -87,6 +101,8 @@ const appReducer = createReducer(initialState, builder => {
         login.pending,
         getUserChats.pending,
         getUser.pending,
+        getUsers.pending,
+        createChat.pending,
       ),
       state => {
         state.loading = LoadingStatus.LOADING;
@@ -99,6 +115,8 @@ const appReducer = createReducer(initialState, builder => {
         login.rejected,
         getUserChats.rejected,
         getUser.rejected,
+        getUsers.rejected,
+        createChat.rejected,
       ),
       (state, action) => {
         state.loading = LoadingStatus.FAILED;

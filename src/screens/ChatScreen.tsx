@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {FC, useCallback, useEffect} from 'react';
+import React, {FC, useCallback, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -23,14 +23,18 @@ import {
 import IconExit from '../icons/IconExit';
 import {appActionCreator} from '../store/actions';
 import UserChat from '../components/UserChat';
+import PotentialChat from '../components/PotentialChat';
+import {IUser} from '../store/app/appReducer';
 
 const ChatScreen: FC = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
 
-  const {authUser, validationError, loading, userChats} = useSelector(
+  const {authUser, validationError, loading, userChats, users} = useSelector(
     (state: RootState) => state.app,
   );
+
+  const [potentialUsers, setPotentialUsers] = useState<IUser[] | null>(null);
 
   const disableBackButton = useCallback(() => {
     if (navigation.isFocused()) {
@@ -59,8 +63,27 @@ const ChatScreen: FC = () => {
   useEffect(() => {
     if (authUser?._id) {
       dispatch(appActionCreator.getUserChats(authUser?._id));
+      dispatch(appActionCreator.getUsers({}));
     }
   }, []);
+
+  useEffect(() => {
+    if (users) {
+      if (userChats?.length === 0 || !userChats) {
+        setPotentialUsers(users?.filter(item => item._id !== authUser?._id));
+        return;
+      }
+      const firstIdsInChats = userChats?.map(item => item.members[0]);
+      const secondIdsInChats = userChats?.map(item => item.members[1]);
+      const unicIdsinChats = [
+        ...new Set([...firstIdsInChats, ...secondIdsInChats]),
+      ];
+
+      const filteredUsers = users.filter(u => !unicIdsinChats.includes(u._id));
+
+      setPotentialUsers(filteredUsers);
+    }
+  }, [users, userChats]);
 
   // console.log(
   //   '-->>',
@@ -95,7 +118,11 @@ const ChatScreen: FC = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.mainPart}>
-        <Text>List</Text>
+        <Text>List of users for potential </Text>
+        {potentialUsers?.map((u, index) => {
+          return <PotentialChat key={index} user={u} />;
+        })}
+        <Text>List of chats</Text>
         {userChats?.map((chat, index) => {
           return <UserChat key={index} chat={chat} authUser={authUser} />;
         })}
@@ -128,7 +155,6 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZE.size_14,
   },
   mainPart: {
-    flex: 1,
     paddingHorizontal: PADDING_HORIZONTAL,
   },
 });
