@@ -2,6 +2,7 @@ import {createReducer, isAnyOf, SerializedError} from '@reduxjs/toolkit';
 
 import {
   clearValidationError,
+  getUser,
   getUserChats,
   login,
   logout,
@@ -15,6 +16,14 @@ export interface IAuthUser {
   name: string;
   email: string;
   token: string;
+}
+
+export interface IUser {
+  _id: string;
+  name: string;
+  email: string;
+  updatedAt: string;
+  createdAt: string;
 }
 
 export interface IUserChatsResponse {
@@ -59,6 +68,10 @@ const appReducer = createReducer(initialState, builder => {
       state.validationError = null;
       state.loading = LoadingStatus.SUCCEEDED;
     })
+    .addCase(getUser.fulfilled, (state, action) => {
+      state.validationError = null;
+      state.loading = LoadingStatus.SUCCEEDED;
+    })
 
     .addCase(clearValidationError, state => {
       state.validationError = null;
@@ -69,14 +82,24 @@ const appReducer = createReducer(initialState, builder => {
     })
 
     .addMatcher(
-      isAnyOf(register.pending, login.pending, getUserChats.pending),
+      isAnyOf(
+        register.pending,
+        login.pending,
+        getUserChats.pending,
+        getUser.pending,
+      ),
       state => {
         state.loading = LoadingStatus.LOADING;
       },
     )
 
     .addMatcher(
-      isAnyOf(register.rejected, login.rejected, getUserChats.rejected),
+      isAnyOf(
+        register.rejected,
+        login.rejected,
+        getUserChats.rejected,
+        getUser.rejected,
+      ),
       (state, action) => {
         state.loading = LoadingStatus.FAILED;
         state.validationError = action.error;

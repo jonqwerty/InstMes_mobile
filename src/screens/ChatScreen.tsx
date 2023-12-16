@@ -22,6 +22,7 @@ import {
 } from '../theme/theme';
 import IconExit from '../icons/IconExit';
 import {appActionCreator} from '../store/actions';
+import UserChat from '../components/UserChat';
 
 const ChatScreen: FC = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -93,7 +94,12 @@ const ChatScreen: FC = () => {
           <IconExit fill={COLORS.primaryWhiteHex} />
         </TouchableOpacity>
       </View>
-      <Text>ChatScreen</Text>
+      <View style={styles.mainPart}>
+        <Text>List</Text>
+        {userChats?.map((chat, index) => {
+          return <UserChat key={index} chat={chat} authUser={authUser} />;
+        })}
+      </View>
     </View>
   );
 };
@@ -114,10 +120,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: PADDING_HORIZONTAL,
     backgroundColor: COLORS.primaryBlueHex,
   },
+
   logged: {
     fontFamily: FONT_FAMILY.lato_bold,
     color: COLORS.primaryWhiteHex,
     lineHeight: 16,
     fontSize: FONT_SIZE.size_14,
+  },
+  mainPart: {
+    flex: 1,
+    paddingHorizontal: PADDING_HORIZONTAL,
   },
 });

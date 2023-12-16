@@ -10,10 +10,13 @@ const App = (() => {
 
   const getUserChats = async (userId: string) => await get(`chats/${userId}`);
 
+  const getUser = async (userId: string) => await get(`users/find/${userId}`);
+
   return {
     register,
     login,
     getUserChats,
+    getUser,
   };
 })();
 

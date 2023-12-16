@@ -4,7 +4,7 @@ import ActionType from './common';
 import * as appServices from '../../services/services';
 import storageMMKV from '../../mmkv/storageMMKV';
 import {StorageKey} from '../../common/enums';
-import {IAuthUser, IUserChatsResponse} from './appReducer';
+import {IAuthUser, IUser, IUserChatsResponse} from './appReducer';
 
 interface IServices {
   extra: {
@@ -55,6 +55,14 @@ const getUserChats = createAsyncThunk<IUserChatsResponse[], string, IServices>(
   },
 );
 
+const getUser = createAsyncThunk<IUser, string, IServices>(
+  ActionType.GET_USER,
+  async (userId, {extra: {services}}) => {
+    const {data} = await services.app.getUser(userId);
+    return data;
+  },
+);
+
 const clearValidationError = createAction(ActionType.CLEAR_VALIDATION_ERROR);
 const resetLoadingState = createAction(ActionType.RESET_LOADING_STATE);
 
@@ -65,4 +73,5 @@ export {
   clearValidationError,
   resetLoadingState,
   getUserChats,
+  getUser,
 };
