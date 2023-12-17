@@ -4,7 +4,12 @@ import ActionType from './common';
 import * as appServices from '../../services/services';
 import storageMMKV from '../../mmkv/storageMMKV';
 import {StorageKey} from '../../common/enums';
-import {IAuthUser, IUser, IUserChatsResponse} from './appReducer';
+import {
+  IAuthUser,
+  IGetMessagesResponse,
+  IUser,
+  IUserChatsResponse,
+} from './appReducer';
 
 interface IServices {
   extra: {
@@ -80,8 +85,19 @@ const createChat = createAsyncThunk<
   return data;
 });
 
+const getMessages = createAsyncThunk<IGetMessagesResponse[], string, IServices>(
+  ActionType.GET_MESSAGES,
+  async (chatId, {extra: {services}}) => {
+    const {data} = await services.app.getMessages(chatId);
+    return data;
+  },
+);
+
 const clearValidationError = createAction(ActionType.CLEAR_VALIDATION_ERROR);
 const resetLoadingState = createAction(ActionType.RESET_LOADING_STATE);
+const setCurrentChat = createAction<IUserChatsResponse | null>(
+  ActionType.SET_CURRENT_CHAT,
+);
 
 export {
   register,
@@ -93,4 +109,6 @@ export {
   getUser,
   getUsers,
   createChat,
+  setCurrentChat,
+  getMessages,
 };

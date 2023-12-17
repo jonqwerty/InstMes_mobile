@@ -36,6 +36,10 @@
     {
       "path": "src/assets/fonts/Lato-ThinItalic.ttf",
       "sha1": "ff4a1a9fe2dcc41d993f4c5067a3baa1c456ff97"
+    },
+    {
+      "path": "src/assets/images/avatar.png",
+      "sha1": "fdda815776e801d1faea88d2897f2e90e2280b82"
     }
   ]
 }

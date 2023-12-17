@@ -10,6 +10,7 @@ import LoginScreen from '../screens/LoginScreen';
 import ChatScreen from '../screens/ChatScreen';
 import {RootState} from '../store/store';
 import {RootStackParamList} from '../common/enums';
+import UserChatScreen from '../screens/UserChatScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -51,6 +52,11 @@ const Routes = () => {
       <Stack.Screen
         name="Chat"
         component={ChatScreen}
+        options={{animation: 'slide_from_bottom'}}
+      />
+      <Stack.Screen
+        name="UserChat"
+        component={UserChatScreen}
         options={{animation: 'slide_from_bottom'}}
       />
     </Stack.Navigator>

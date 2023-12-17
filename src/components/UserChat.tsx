@@ -5,6 +5,9 @@ import {IAuthUser, IUser, IUserChatsResponse} from '../store/app/appReducer';
 import {useAppDispatch} from '../store/store';
 import {appActionCreator} from '../store/actions';
 import {COLORS, FONT_FAMILY, FONT_SIZE} from '../theme/theme';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList, Screen} from '../common/enums';
 
 interface IUserChatProps {
   chat: IUserChatsResponse;
@@ -13,6 +16,7 @@ interface IUserChatProps {
 
 const UserChat: FC<IUserChatProps> = ({chat, authUser}) => {
   const dispatch = useAppDispatch();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const [recipientUser, setRecipientUser] = useState<IUser | null>(null);
 
@@ -29,8 +33,13 @@ const UserChat: FC<IUserChatProps> = ({chat, authUser}) => {
     })();
   }, []);
 
+  const handleClickChat = () => {
+    dispatch(appActionCreator.setCurrentChat(chat));
+    navigation.navigate(Screen.UserChat, {});
+  };
+
   return (
-    <TouchableOpacity style={styles.container} onPress={() => {}}>
+    <TouchableOpacity style={styles.container} onPress={handleClickChat}>
       <View style={styles.block}>
         <View style={styles.row}>
           <Image
@@ -56,8 +65,8 @@ export default UserChat;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 4,
-    borderWidth: 1,
+    marginTop: 10,
+    borderBottomWidth: 1,
     borderColor: COLORS.primaryBlackHex,
     padding: 5,
   },
@@ -66,12 +75,12 @@ const styles = StyleSheet.create({
   name: {
     fontFamily: FONT_FAMILY.lato_bold,
     color: COLORS.primaryWhiteHex,
-    lineHeight: 16,
-    fontSize: FONT_SIZE.size_14,
+    lineHeight: 20,
+    fontSize: FONT_SIZE.size_18,
   },
   img: {
-    height: 35,
-    width: 35,
-    marginRight: 10,
+    height: 45,
+    width: 45,
+    marginRight: 16,
   },
 });

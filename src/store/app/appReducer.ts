@@ -3,6 +3,7 @@ import {createReducer, isAnyOf, SerializedError} from '@reduxjs/toolkit';
 import {
   clearValidationError,
   createChat,
+  getMessages,
   getUser,
   getUserChats,
   getUsers,
@@ -10,6 +11,7 @@ import {
   logout,
   register,
   resetLoadingState,
+  setCurrentChat,
 } from './actions';
 import {LoadingStatus} from '../../common/enums';
 
@@ -34,6 +36,14 @@ export interface IUserChatsResponse {
   createdAt: string;
   updatedAt: string;
 }
+export interface IGetMessagesResponse {
+  _id: string;
+  chatId: string;
+  senderId: string;
+  text: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export interface IAuth {
   authUser: IAuthUser | null;
@@ -41,6 +51,8 @@ export interface IAuth {
   loading: string;
   userChats: IUserChatsResponse[] | null;
   users: IUser[] | null;
+  currentChat: IUserChatsResponse | null;
+  messages: IGetMessagesResponse[] | null;
 }
 
 const initialState: IAuth = {
@@ -49,6 +61,8 @@ const initialState: IAuth = {
   loading: LoadingStatus.IDLE,
   userChats: null,
   users: null,
+  currentChat: null,
+  messages: null,
 };
 
 const appReducer = createReducer(initialState, builder => {
@@ -82,7 +96,11 @@ const appReducer = createReducer(initialState, builder => {
       state.loading = LoadingStatus.SUCCEEDED;
     })
     .addCase(createChat.fulfilled, (state, action) => {
-      
+      state.validationError = null;
+      state.loading = LoadingStatus.SUCCEEDED;
+    })
+    .addCase(getMessages.fulfilled, (state, action) => {
+      state.messages = action.payload;
       state.validationError = null;
       state.loading = LoadingStatus.SUCCEEDED;
     })
@@ -94,6 +112,9 @@ const appReducer = createReducer(initialState, builder => {
     .addCase(resetLoadingState, state => {
       state.loading = LoadingStatus.IDLE;
     })
+    .addCase(setCurrentChat, (state, action) => {
+      state.currentChat = action.payload;
+    })
 
     .addMatcher(
       isAnyOf(
@@ -103,6 +124,7 @@ const appReducer = createReducer(initialState, builder => {
         getUser.pending,
         getUsers.pending,
         createChat.pending,
+        getMessages.pending,
       ),
       state => {
         state.loading = LoadingStatus.LOADING;
@@ -117,6 +139,7 @@ const appReducer = createReducer(initialState, builder => {
         getUser.rejected,
         getUsers.rejected,
         createChat.rejected,
+        getMessages.rejected,
       ),
       (state, action) => {
         state.loading = LoadingStatus.FAILED;

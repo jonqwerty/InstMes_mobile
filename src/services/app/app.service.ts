@@ -17,6 +17,9 @@ const App = (() => {
   const createChat = async (body: {firstId: string; secondId: string}) =>
     await post(`/chats`, body);
 
+  const getMessages = async (chatId: string) =>
+    await get(`/messages/${chatId}`);
+
   return {
     register,
     login,
@@ -24,6 +27,7 @@ const App = (() => {
     getUser,
     getUsers,
     createChat,
+    getMessages,
   };
 })();
 

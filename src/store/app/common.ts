@@ -8,6 +8,8 @@ const ActionType = {
   GET_USER: 'auth/get-user',
   GET_USERS: 'auth/get-users',
   CREATE_CHAT: 'auth/create-chat',
+  SET_CURRENT_CHAT: 'auth/set-current-chat',
+  GET_MESSAGES: 'auth/get-messages',
 };
 
 export default ActionType;
