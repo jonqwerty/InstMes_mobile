@@ -1,4 +1,11 @@
-import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {FC, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -71,8 +78,8 @@ const UserChatScreen: FC = () => {
             <View
               style={
                 message.senderId === authUser?._id
-                  ? styles.authUser
-                  : styles.recipient
+                  ? styles.recipient
+                  : styles.authUser
               }>
               <Text style={styles.text}> {message.text}</Text>
               <View style={styles.gap}>
