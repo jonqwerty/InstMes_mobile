@@ -93,6 +93,19 @@ const getMessages = createAsyncThunk<IGetMessagesResponse[], string, IServices>(
   },
 );
 
+const sendMessage = createAsyncThunk<
+  {},
+  {
+    chatId: string;
+    senderId: string;
+    text: string;
+  },
+  IServices
+>(ActionType.SEND_MESSAGE, async (body, {extra: {services}}) => {
+  const {data} = await services.app.sendMessage(body);
+  return data;
+});
+
 const clearValidationError = createAction(ActionType.CLEAR_VALIDATION_ERROR);
 const resetLoadingState = createAction(ActionType.RESET_LOADING_STATE);
 const setCurrentChat = createAction<IUserChatsResponse | null>(
@@ -111,4 +124,5 @@ export {
   createChat,
   setCurrentChat,
   getMessages,
+  sendMessage,
 };

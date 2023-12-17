@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {FC, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -15,6 +15,7 @@ import {appActionCreator} from '../store/actions';
 import {IUser} from '../store/app/appReducer';
 import IconLeftArrow from '../icons/IconLeftArrow';
 import {RootStackParamList} from '../common/enums';
+import SendTextBlock from '../components/SendTextBlock';
 
 const UserChatScreen: FC = () => {
   const dispatch = useAppDispatch();
@@ -64,7 +65,7 @@ const UserChatScreen: FC = () => {
           <Text style={styles.name}>{recipientUser?.name}</Text>
         </View>
       </View>
-      <View style={styles.mainPart}>
+      <ScrollView style={styles.mainPart}>
         {messages?.map((message, index) => {
           return (
             <View
@@ -85,7 +86,8 @@ const UserChatScreen: FC = () => {
             </View>
           );
         })}
-      </View>
+      </ScrollView>
+      <SendTextBlock />
     </View>
   );
 };

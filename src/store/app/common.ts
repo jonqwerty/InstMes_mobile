@@ -10,6 +10,7 @@ const ActionType = {
   CREATE_CHAT: 'auth/create-chat',
   SET_CURRENT_CHAT: 'auth/set-current-chat',
   GET_MESSAGES: 'auth/get-messages',
+  SEND_MESSAGE: 'auth/send-message',
 };
 
 export default ActionType;
