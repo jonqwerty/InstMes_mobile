@@ -21,7 +21,7 @@ const SendTextBlock: FC = () => {
 
   const [text, setText] = useState<string>('');
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (text) {
       if (currentChat && authUser) {
         const body = {
@@ -29,8 +29,9 @@ const SendTextBlock: FC = () => {
           senderId: authUser?._id,
           text: text,
         };
-        dispatch(appActionCreator.sendMessage(body));
+        await dispatch(appActionCreator.sendMessage(body));
         setText('');
+        await dispatch(appActionCreator.getMessages(currentChat?._id));
       }
     }
   };

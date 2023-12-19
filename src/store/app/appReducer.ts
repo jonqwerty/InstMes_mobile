@@ -11,6 +11,7 @@ import {
   logout,
   register,
   resetLoadingState,
+  sendMessage,
   setCurrentChat,
 } from './actions';
 import {LoadingStatus} from '../../common/enums';
@@ -53,6 +54,7 @@ export interface IAuth {
   users: IUser[] | null;
   currentChat: IUserChatsResponse | null;
   messages: IGetMessagesResponse[] | null;
+  newMessage: IGetMessagesResponse | null;
 }
 
 const initialState: IAuth = {
@@ -63,6 +65,7 @@ const initialState: IAuth = {
   users: null,
   currentChat: null,
   messages: null,
+  newMessage: null,
 };
 
 const appReducer = createReducer(initialState, builder => {
@@ -104,6 +107,11 @@ const appReducer = createReducer(initialState, builder => {
       state.validationError = null;
       state.loading = LoadingStatus.SUCCEEDED;
     })
+    .addCase(sendMessage.fulfilled, (state, action) => {
+      state.newMessage = action.payload;
+      state.validationError = null;
+      state.loading = LoadingStatus.SUCCEEDED;
+    })
 
     .addCase(clearValidationError, state => {
       state.validationError = null;
@@ -125,6 +133,7 @@ const appReducer = createReducer(initialState, builder => {
         getUsers.pending,
         createChat.pending,
         getMessages.pending,
+        sendMessage.pending,
       ),
       state => {
         state.loading = LoadingStatus.LOADING;
@@ -140,6 +149,7 @@ const appReducer = createReducer(initialState, builder => {
         getUsers.rejected,
         createChat.rejected,
         getMessages.rejected,
+        sendMessage.rejected,
       ),
       (state, action) => {
         state.loading = LoadingStatus.FAILED;

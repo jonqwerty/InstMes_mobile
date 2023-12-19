@@ -1,7 +1,8 @@
 import {ReactNode, createContext, useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {Socket, io} from 'socket.io-client';
-import {RootState} from '../store/store';
+import {RootState, useAppDispatch} from '../store/store';
+import {appActionCreator} from '../store/actions';
 
 interface Props {
   children?: ReactNode;
@@ -18,13 +19,14 @@ export const SocketContext = createContext<ISocketContext>({
 });
 
 export const SocketContextProvider = ({children}: Props) => {
-  const {authUser} = useSelector((state: RootState) => state.app);
+  const dispatch = useAppDispatch();
+  const {authUser, newMessage, currentChat, messages} = useSelector(
+    (state: RootState) => state.app,
+  );
 
   const [socket, setSocket] = useState<Socket | null>(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
 
-  console.log('socket', socket);
-  console.log('onlineUsers', onlineUsers);
   useEffect(() => {
     const newSocket: Socket = io('http://192.168.0.5:3000');
     setSocket(newSocket);
@@ -45,6 +47,32 @@ export const SocketContextProvider = ({children}: Props) => {
       socket.off('getOnlineUsers');
     };
   }, [socket]);
+
+  // send message
+  useEffect(() => {
+    if (socket === null) return;
+
+    const recipientId = currentChat?.members?.find(id => id !== authUser?._id);
+
+    socket.emit('sendMessage', {...newMessage, recipientId});
+  }, [newMessage]);
+
+  // receive message
+  useEffect(() => {
+    if (socket === null) return;
+
+    socket.on('getMessage', res => {
+      if (currentChat?._id !== res.chatId) {
+        return;
+      }
+      dispatch(appActionCreator.getMessages(currentChat?._id as string));
+    });
+
+    return () => {
+      socket.off('getMessage');
+    };
+  }, [socket, currentChat]);
+
   return (
     <SocketContext.Provider
       value={{

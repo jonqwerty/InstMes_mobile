@@ -94,7 +94,7 @@ const getMessages = createAsyncThunk<IGetMessagesResponse[], string, IServices>(
 );
 
 const sendMessage = createAsyncThunk<
-  {},
+  IGetMessagesResponse,
   {
     chatId: string;
     senderId: string;

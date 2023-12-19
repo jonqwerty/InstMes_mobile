@@ -57,8 +57,7 @@ const ChatScreen: FC = () => {
     }
   }, [navigation]);
 
-  console.log('socket', socket);
-  console.log('onlineUsers', onlineUsers);
+  
 
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', disableBackButton);
