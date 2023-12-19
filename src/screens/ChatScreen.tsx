@@ -1,6 +1,7 @@
 import {
   Alert,
   BackHandler,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -124,10 +125,20 @@ const ChatScreen: FC = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.mainPart}>
-        <Text>List of users for potential </Text>
-        {potentialUsers?.map((u, index) => {
-          return <PotentialChat key={index} user={u} />;
-        })}
+        <Text>List of potential users </Text>
+
+        <ScrollView
+          style={styles.containerOfPotentials}
+          contentContainerStyle={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            gap: 10,
+          }}>
+          {potentialUsers?.map((u, index) => {
+            return <PotentialChat key={index} user={u} />;
+          })}
+        </ScrollView>
+
         <Text>List of chats</Text>
         {userChats?.map((chat, index) => {
           return <UserChat key={index} chat={chat} authUser={authUser} />;
@@ -162,5 +173,9 @@ const styles = StyleSheet.create({
   },
   mainPart: {
     paddingHorizontal: PADDING_HORIZONTAL,
+  },
+  containerOfPotentials: {
+    maxHeight: 100,
+    width: '100%',
   },
 });

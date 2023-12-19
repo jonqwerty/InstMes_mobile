@@ -1,11 +1,12 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {FC} from 'react';
+import React, {FC, useContext} from 'react';
 import {useSelector} from 'react-redux';
 
 import {COLORS, FONT_FAMILY, FONT_SIZE} from '../theme/theme';
 import {IUser} from '../store/app/appReducer';
 import {RootState, useAppDispatch} from '../store/store';
 import {appActionCreator} from '../store/actions';
+import {SocketContext} from '../context/SocketContext';
 
 interface IPotentialChatProps {
   user: IUser;
@@ -13,6 +14,7 @@ interface IPotentialChatProps {
 
 const PotentialChat: FC<IPotentialChatProps> = ({user}) => {
   const dispatch = useAppDispatch();
+  const {onlineUsers} = useContext(SocketContext);
   const {authUser} = useSelector((state: RootState) => state.app);
 
   const handleCreateChat = async () => {
@@ -29,7 +31,9 @@ const PotentialChat: FC<IPotentialChatProps> = ({user}) => {
 
   return (
     <TouchableOpacity style={styles.container} onPress={handleCreateChat}>
-      <View style={styles.dot}></View>
+      <View
+        style={onlineUsers.some(u => u.userId === user._id) ? styles.dot : null}
+      />
       <Text style={styles.text}>{user.name}</Text>
     </TouchableOpacity>
   );
@@ -43,6 +47,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primaryBlueHex,
     borderRadius: 4,
     padding: 10,
+    alignSelf: 'flex-start',
   },
   text: {
     fontFamily: FONT_FAMILY.lato_bold,
@@ -56,7 +61,7 @@ const styles = StyleSheet.create({
     right: -6,
     width: 12,
     height: 12,
-    backgroundColor: COLORS.primaryRedHex,
+    backgroundColor: COLORS.primaryGreenHex,
     borderRadius: 6,
   },
 });

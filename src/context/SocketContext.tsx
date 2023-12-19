@@ -9,7 +9,7 @@ interface Props {
 
 export interface ISocketContext {
   socket: object | null;
-  onlineUsers: {sockedId: string | null; iserId: string}[] | [];
+  onlineUsers: {sockedId: string | null; userId: string}[] | [];
 }
 
 export const SocketContext = createContext<ISocketContext>({
@@ -34,12 +34,16 @@ export const SocketContextProvider = ({children}: Props) => {
     };
   }, [authUser]);
 
+  // add online users
   useEffect(() => {
     if (socket === null) return;
     socket.emit('addNewUser', authUser?._id);
     socket.on('getOnlineUsers', res => {
       setOnlineUsers(res);
     });
+    return () => {
+      socket.off('getOnlineUsers');
+    };
   }, [socket]);
   return (
     <SocketContext.Provider

@@ -1,5 +1,5 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useContext, useEffect, useState} from 'react';
 
 import {IAuthUser, IUser, IUserChatsResponse} from '../store/app/appReducer';
 import {useAppDispatch} from '../store/store';
@@ -8,6 +8,7 @@ import {COLORS, FONT_FAMILY, FONT_SIZE} from '../theme/theme';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList, Screen} from '../common/enums';
+import {SocketContext} from '../context/SocketContext';
 
 interface IUserChatProps {
   chat: IUserChatsResponse;
@@ -16,11 +17,14 @@ interface IUserChatProps {
 
 const UserChat: FC<IUserChatProps> = ({chat, authUser}) => {
   const dispatch = useAppDispatch();
+  const {onlineUsers} = useContext(SocketContext);
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const [recipientUser, setRecipientUser] = useState<IUser | null>(null);
 
   const recipientId = chat?.members?.find(id => id !== authUser?._id);
+
+  const isOnline = onlineUsers?.some(user => user.userId === recipientId);
 
   useEffect(() => {
     (async () => {
@@ -42,6 +46,7 @@ const UserChat: FC<IUserChatProps> = ({chat, authUser}) => {
     <TouchableOpacity style={styles.container} onPress={handleClickChat}>
       <View style={styles.block}>
         <View style={styles.row}>
+          <View style={isOnline ? styles.dot : null} />
           <Image
             style={styles.img}
             source={require('../assets/images/avatar.png')}
@@ -82,5 +87,15 @@ const styles = StyleSheet.create({
     height: 45,
     width: 45,
     marginRight: 16,
+  },
+  dot: {
+    position: 'absolute',
+    top: 0,
+    left: 35,
+    width: 12,
+    height: 12,
+    backgroundColor: COLORS.primaryGreenHex,
+    borderRadius: 6,
+    zIndex: 2,
   },
 });
