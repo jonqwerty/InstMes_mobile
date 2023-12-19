@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {FC, useCallback, useEffect, useState} from 'react';
+import React, {FC, useCallback, useContext, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -25,10 +25,13 @@ import {appActionCreator} from '../store/actions';
 import UserChat from '../components/UserChat';
 import PotentialChat from '../components/PotentialChat';
 import {IUser} from '../store/app/appReducer';
+import {SocketContext} from '../context/SocketContext';
 
 const ChatScreen: FC = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
+
+  const {socket, onlineUsers} = useContext(SocketContext);
 
   const {authUser, validationError, loading, userChats, users} = useSelector(
     (state: RootState) => state.app,
@@ -52,6 +55,9 @@ const ChatScreen: FC = () => {
       return true;
     }
   }, [navigation]);
+
+  console.log('socket', socket);
+  console.log('onlineUsers', onlineUsers);
 
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', disableBackButton);

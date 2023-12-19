@@ -76,6 +76,7 @@ const UserChatScreen: FC = () => {
         {messages?.map((message, index) => {
           return (
             <View
+              key={index}
               style={
                 message.senderId === authUser?._id
                   ? styles.recipient

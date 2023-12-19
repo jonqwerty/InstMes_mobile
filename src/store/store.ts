@@ -1,6 +1,6 @@
 import {CombinedState, combineReducers, configureStore} from '@reduxjs/toolkit';
 import {useDispatch} from 'react-redux';
-import MMKVStorage, {MMKV} from 'react-native-mmkv';
+import {MMKV} from 'react-native-mmkv';
 
 import appReducer, {IAuth} from './app/appReducer';
 import * as services from '../services/services';
@@ -8,6 +8,7 @@ import loggerMiddleware from './middlewares/loggerMiddleware';
 import {
   PersistConfig,
   Storage,
+  createTransform,
   persistReducer,
   persistStore,
 } from 'redux-persist';
