@@ -6,10 +6,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {FC, useEffect, useState} from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useSelector} from 'react-redux';
+import {useKeyboard} from '@react-native-community/hooks';
 
 import {
   COLORS,
@@ -28,6 +29,9 @@ const UserChatScreen: FC = () => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
+  const keyboard = useKeyboard();
+  const scrollRef = useRef<ScrollView | null>(null);
+
   const {authUser, currentChat, messages} = useSelector(
     (state: RootState) => state.app,
   );
@@ -35,6 +39,16 @@ const UserChatScreen: FC = () => {
   const [recipientUser, setRecipientUser] = useState<IUser | null>(null);
 
   const recipientId = currentChat?.members?.find(id => id !== authUser?._id);
+
+  useEffect(() => {
+    scrollRef?.current?.scrollToEnd();
+  }, [messages]);
+
+  useEffect(() => {
+    if (keyboard.keyboardShown) {
+      scrollRef?.current?.scrollToEnd();
+    }
+  }, [keyboard.keyboardShown]);
 
   useEffect(() => {
     (async () => {
@@ -72,7 +86,7 @@ const UserChatScreen: FC = () => {
           <Text style={styles.name}>{recipientUser?.name}</Text>
         </View>
       </View>
-      <ScrollView style={styles.mainPart}>
+      <ScrollView style={styles.mainPart} ref={scrollRef}>
         {messages?.map((message, index) => {
           return (
             <View
@@ -95,7 +109,7 @@ const UserChatScreen: FC = () => {
           );
         })}
       </ScrollView>
-      <SendTextBlock />
+      <SendTextBlock scrollRef={scrollRef} />
     </View>
   );
 };
@@ -132,6 +146,7 @@ const styles = StyleSheet.create({
   },
   mainPart: {
     paddingHorizontal: PADDING_HORIZONTAL,
+    marginBottom: 10,
   },
   authUser: {
     padding: 12,

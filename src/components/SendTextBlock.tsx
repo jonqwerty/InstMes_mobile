@@ -1,4 +1,5 @@
 import {
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -14,7 +15,11 @@ import IconSendMessage from '../icons/IconSendMessage';
 import {RootState, useAppDispatch} from '../store/store';
 import {appActionCreator} from '../store/actions';
 
-const SendTextBlock: FC = () => {
+interface ISendTextBlock {
+  scrollRef: React.MutableRefObject<ScrollView | null>;
+}
+
+const SendTextBlock: FC<ISendTextBlock> = ({scrollRef}) => {
   const dispatch = useAppDispatch();
 
   const {authUser, currentChat} = useSelector((state: RootState) => state.app);
@@ -32,6 +37,7 @@ const SendTextBlock: FC = () => {
         await dispatch(appActionCreator.sendMessage(body));
         setText('');
         await dispatch(appActionCreator.getMessages(currentChat?._id));
+        scrollRef?.current?.scrollToEnd();
       }
     }
   };
