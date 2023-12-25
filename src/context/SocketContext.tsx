@@ -35,6 +35,10 @@ export interface ISocketContext {
     user: IAuthUser,
     notifications: INotificationItem[],
   ) => void;
+  markThisUserNotificationAsRead: (
+    thisUserNotifications: INotificationItem[],
+    notifications: INotificationItem[],
+  ) => void;
 }
 
 export const SocketContext = createContext<ISocketContext>({
@@ -43,6 +47,7 @@ export const SocketContext = createContext<ISocketContext>({
   notifications: [],
   markAllNotificationsAsRead: () => {},
   markNotificationAsRead: () => {},
+  markThisUserNotificationAsRead: () => {},
 });
 
 export const SocketContextProvider = ({children}: Props) => {
@@ -164,6 +169,28 @@ export const SocketContextProvider = ({children}: Props) => {
     [],
   );
 
+  const markThisUserNotificationAsRead = useCallback(
+    (
+      thisUserNotifications: INotificationItem[],
+      notifications: INotificationItem[],
+    ) => {
+      const mNotifications = notifications?.map(el => {
+        let notification;
+
+        thisUserNotifications.forEach(n => {
+          if (n.senderId === el.senderId) {
+            notification = {...n, isRead: true};
+          } else {
+            notification = el;
+          }
+        });
+        return notification;
+      });
+      setNotifications(mNotifications);
+    },
+    [],
+  );
+
   return (
     <SocketContext.Provider
       value={{
@@ -172,6 +199,7 @@ export const SocketContextProvider = ({children}: Props) => {
         notifications,
         markAllNotificationsAsRead,
         markNotificationAsRead,
+        markThisUserNotificationAsRead,
       }}>
       {children}
     </SocketContext.Provider>

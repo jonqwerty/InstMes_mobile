@@ -9,6 +9,8 @@ import {appActionCreator} from '../store/actions';
 import {COLORS, FONT_FAMILY, FONT_SIZE} from '../theme/theme';
 import {RootStackParamList, Screen} from '../common/enums';
 import {SocketContext} from '../context/SocketContext';
+import {unreadedNotificationsFunc} from '../utils/utils';
+import {useFetchLatestMessage} from '../hooks/useFetchLatestMessage';
 
 interface IUserChatProps {
   chat: IUserChatsResponse;
@@ -17,14 +19,23 @@ interface IUserChatProps {
 
 const UserChat: FC<IUserChatProps> = ({chat, authUser}) => {
   const dispatch = useAppDispatch();
-  const {onlineUsers} = useContext(SocketContext);
+  const {onlineUsers, notifications, markThisUserNotificationAsRead} =
+    useContext(SocketContext);
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const {latestMessage} = useFetchLatestMessage(chat);
 
   const [recipientUser, setRecipientUser] = useState<IUser | null>(null);
 
   const recipientId = chat?.members?.find(id => id !== authUser?._id);
 
   const isOnline = onlineUsers?.some(user => user.userId === recipientId);
+
+  const unreadNotifications = unreadedNotificationsFunc(notifications);
+
+  const thisUserNotifications = unreadNotifications.filter(
+    n => n.senderId === recipientUser?._id,
+  );
 
   useEffect(() => {
     (async () => {
@@ -38,8 +49,20 @@ const UserChat: FC<IUserChatProps> = ({chat, authUser}) => {
   }, []);
 
   const handleClickChat = () => {
+    if (thisUserNotifications.length !== 0) {
+      markThisUserNotificationAsRead(thisUserNotifications, notifications);
+    }
     dispatch(appActionCreator.setCurrentChat(chat));
     navigation.navigate(Screen.UserChat, {});
+  };
+
+  const truncateText = (text: string) => {
+    let shortText = text.substring(0, 20);
+
+    if (text.length > 20) {
+      shortText = shortText + '...';
+    }
+    return shortText;
   };
 
   return (
@@ -53,13 +76,21 @@ const UserChat: FC<IUserChatProps> = ({chat, authUser}) => {
           />
           <View>
             <Text style={styles.name}>{recipientUser?.name}</Text>
-            <Text>text message</Text>
+            {latestMessage && <Text>{truncateText(latestMessage?.text)}</Text>}
           </View>
         </View>
 
         <View>
-          <Text>12/12/1212</Text>
-          <Text style={styles.name}>2</Text>
+          <Text>{latestMessage?.createdAt}</Text>
+
+          <View
+            style={thisUserNotifications.length > 0 ? styles.quantity : null}>
+            <Text style={styles.text}>
+              {thisUserNotifications?.length > 0
+                ? thisUserNotifications?.length
+                : null}
+            </Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -80,8 +111,8 @@ const styles = StyleSheet.create({
   name: {
     fontFamily: FONT_FAMILY.lato_bold,
     color: COLORS.primaryWhiteHex,
-    lineHeight: 20,
-    fontSize: FONT_SIZE.size_18,
+    lineHeight: 22,
+    fontSize: FONT_SIZE.size_20,
   },
   img: {
     height: 45,
@@ -98,4 +129,14 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     zIndex: 2,
   },
+  quantity: {
+    width: 20,
+
+    backgroundColor: COLORS.primaryGreenHex,
+    height: 20,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {color: COLORS.primaryWhiteHex},
 });

@@ -27,6 +27,7 @@ import UserChat from '../components/UserChat';
 import PotentialChat from '../components/PotentialChat';
 import {IUser} from '../store/app/appReducer';
 import Notification from '../components/Notification';
+import {SocketContext} from '../context/SocketContext';
 
 const ChatScreen: FC = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -35,6 +36,7 @@ const ChatScreen: FC = () => {
   const {authUser, validationError, loading, userChats, users} = useSelector(
     (state: RootState) => state.app,
   );
+  const {notifications} = useContext(SocketContext);
 
   const [potentialUsers, setPotentialUsers] = useState<IUser[] | null>(null);
 
@@ -67,7 +69,7 @@ const ChatScreen: FC = () => {
       dispatch(appActionCreator.getUserChats(authUser?._id));
       dispatch(appActionCreator.getUsers({}));
     }
-  }, []);
+  }, [authUser, notifications]);
 
   useEffect(() => {
     if (users) {

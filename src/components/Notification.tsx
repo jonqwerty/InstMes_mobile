@@ -37,9 +37,6 @@ const Notification = () => {
     };
   });
 
-  console.log('un', authUser?.name, unreadedNotifications);
-  console.log('mn', authUser?.name, modifiedNotifications);
-
   const handleMarkAll = () => {
     markAllNotificationsAsRead(notifications);
   };
