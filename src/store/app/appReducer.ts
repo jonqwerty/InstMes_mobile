@@ -13,6 +13,7 @@ import {
   resetLoadingState,
   sendMessage,
   setCurrentChat,
+  setNotifications,
 } from './actions';
 import {LoadingStatus} from '../../common/enums';
 
@@ -46,6 +47,12 @@ export interface IGetMessagesResponse {
   updatedAt: string;
 }
 
+export interface INotificationItem {
+  senderId: string;
+  isRead: boolean;
+  date: Date;
+}
+
 export interface IAuth {
   authUser: IAuthUser | null;
   validationError: SerializedError | null;
@@ -55,6 +62,7 @@ export interface IAuth {
   currentChat: IUserChatsResponse | null;
   messages: IGetMessagesResponse[] | null;
   newMessage: IGetMessagesResponse | null;
+  notifications: INotificationItem[] | [];
 }
 
 const initialState: IAuth = {
@@ -66,6 +74,7 @@ const initialState: IAuth = {
   currentChat: null,
   messages: null,
   newMessage: null,
+  notifications: [],
 };
 
 const appReducer = createReducer(initialState, builder => {
@@ -122,6 +131,9 @@ const appReducer = createReducer(initialState, builder => {
     })
     .addCase(setCurrentChat, (state, action) => {
       state.currentChat = action.payload;
+    })
+    .addCase(setNotifications, (state, action) => {
+      state.notifications = action.payload;
     })
 
     .addMatcher(

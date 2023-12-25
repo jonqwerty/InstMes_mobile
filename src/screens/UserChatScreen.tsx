@@ -59,6 +59,9 @@ const UserChatScreen: FC = () => {
         }
       }
     })();
+    return () => {
+      dispatch(appActionCreator.setCurrentChat(null));
+    };
   }, []);
 
   useEffect(() => {

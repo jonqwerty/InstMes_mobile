@@ -11,6 +11,7 @@ const ActionType = {
   SET_CURRENT_CHAT: 'auth/set-current-chat',
   GET_MESSAGES: 'auth/get-messages',
   SEND_MESSAGE: 'auth/send-message',
+  SET_NOTIFICATIONS: 'auth/set-notifications',
 };
 
 export default ActionType;

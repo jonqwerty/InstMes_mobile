@@ -7,6 +7,7 @@ import {StorageKey} from '../../common/enums';
 import {
   IAuthUser,
   IGetMessagesResponse,
+  INotificationItem,
   IUser,
   IUserChatsResponse,
 } from './appReducer';
@@ -111,6 +112,9 @@ const resetLoadingState = createAction(ActionType.RESET_LOADING_STATE);
 const setCurrentChat = createAction<IUserChatsResponse | null>(
   ActionType.SET_CURRENT_CHAT,
 );
+const setNotifications = createAction<INotificationItem[] | []>(
+  ActionType.SET_NOTIFICATIONS,
+);
 
 export {
   register,
@@ -125,4 +129,5 @@ export {
   setCurrentChat,
   getMessages,
   sendMessage,
+  setNotifications,
 };

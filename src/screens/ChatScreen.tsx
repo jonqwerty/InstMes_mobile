@@ -27,12 +27,13 @@ import UserChat from '../components/UserChat';
 import PotentialChat from '../components/PotentialChat';
 import {IUser} from '../store/app/appReducer';
 import {SocketContext} from '../context/SocketContext';
+import IconNotification from '../icons/IconNotification';
+import Notification from '../components/Notification';
 
 const ChatScreen: FC = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
 
-  const {socket, onlineUsers} = useContext(SocketContext);
 
   const {authUser, validationError, loading, userChats, users} = useSelector(
     (state: RootState) => state.app,
@@ -56,8 +57,6 @@ const ChatScreen: FC = () => {
       return true;
     }
   }, [navigation]);
-
-  
 
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', disableBackButton);
@@ -119,6 +118,7 @@ const ChatScreen: FC = () => {
     <View style={styles.container}>
       <View style={styles.top}>
         <Text style={styles.logged}>Logged as {authUser?.name}</Text>
+        <Notification />
         <TouchableOpacity onPress={handleLogout}>
           <IconExit fill={COLORS.primaryWhiteHex} />
         </TouchableOpacity>

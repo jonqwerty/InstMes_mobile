@@ -12,21 +12,34 @@ interface Props {
 export interface ISocketContext {
   socket: object | null;
   onlineUsers: {sockedId: string | null; userId: string}[] | [];
+  notifications: {
+    senderId: string;
+    isRead: boolean;
+    date: Date;
+  }[];
 }
 
 export const SocketContext = createContext<ISocketContext>({
   socket: null,
   onlineUsers: [],
+  notifications: [],
 });
 
 export const SocketContextProvider = ({children}: Props) => {
   const dispatch = useAppDispatch();
-  const {authUser, newMessage, currentChat, messages} = useSelector(
+  const {authUser, newMessage, currentChat} = useSelector(
     (state: RootState) => state.app,
   );
 
   const [socket, setSocket] = useState<Socket | null>(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [notifications, setNotifications] = useState<
+    {
+      senderId: string;
+      isRead: boolean;
+      date: Date;
+    }[]
+  >([]);
 
   useEffect(() => {
     const newSocket: Socket = io('http://192.168.0.5:3000');
@@ -54,11 +67,10 @@ export const SocketContextProvider = ({children}: Props) => {
     if (socket === null) return;
 
     const recipientId = currentChat?.members?.find(id => id !== authUser?._id);
-
     socket.emit('sendMessage', {...newMessage, recipientId});
   }, [newMessage]);
 
-  // receive message
+  // receive message and notification
   useEffect(() => {
     if (socket === null) return;
 
@@ -69,8 +81,22 @@ export const SocketContextProvider = ({children}: Props) => {
       dispatch(appActionCreator.getMessages(currentChat?._id as string));
     });
 
+    socket.on(
+      'getNotification',
+      (res: {senderId: string; isRead: boolean; date: Date}) => {
+        const isChatOpen = currentChat?.members.some(id => id === res.senderId);
+
+        if (isChatOpen) {
+          setNotifications(prev => [{...res, isRead: true}, ...prev]);
+        } else {
+          setNotifications(prev => [res, ...prev]);
+        }
+      },
+    );
+
     return () => {
       socket.off('getMessage');
+      socket.off('getNotification');
     };
   }, [socket, currentChat]);
 
@@ -79,6 +105,7 @@ export const SocketContextProvider = ({children}: Props) => {
       value={{
         socket,
         onlineUsers,
+        notifications,
       }}>
       {children}
     </SocketContext.Provider>
