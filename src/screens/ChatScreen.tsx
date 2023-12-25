@@ -26,8 +26,6 @@ import {appActionCreator} from '../store/actions';
 import UserChat from '../components/UserChat';
 import PotentialChat from '../components/PotentialChat';
 import {IUser} from '../store/app/appReducer';
-import {SocketContext} from '../context/SocketContext';
-import IconNotification from '../icons/IconNotification';
 import Notification from '../components/Notification';
 
 const ChatScreen: FC = () => {
@@ -117,10 +115,12 @@ const ChatScreen: FC = () => {
     <View style={styles.container}>
       <View style={styles.top}>
         <Text style={styles.logged}>Logged as {authUser?.name}</Text>
-        <Notification />
-        <TouchableOpacity onPress={handleLogout}>
-          <IconExit fill={COLORS.primaryWhiteHex} />
-        </TouchableOpacity>
+        <View style={styles.row}>
+          <Notification />
+          <TouchableOpacity onPress={handleLogout}>
+            <IconExit fill={COLORS.primaryWhiteHex} />
+          </TouchableOpacity>
+        </View>
       </View>
       <View style={styles.mainPart}>
         <Text>List of potential users </Text>
@@ -177,4 +177,5 @@ const styles = StyleSheet.create({
     maxHeight: 100,
     width: '100%',
   },
+  row: {flexDirection: 'row', alignItems: 'center'},
 });

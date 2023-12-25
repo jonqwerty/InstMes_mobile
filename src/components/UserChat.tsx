@@ -1,12 +1,12 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {FC, useContext, useEffect, useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 import {IAuthUser, IUser, IUserChatsResponse} from '../store/app/appReducer';
 import {useAppDispatch} from '../store/store';
 import {appActionCreator} from '../store/actions';
 import {COLORS, FONT_FAMILY, FONT_SIZE} from '../theme/theme';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList, Screen} from '../common/enums';
 import {SocketContext} from '../context/SocketContext';
 

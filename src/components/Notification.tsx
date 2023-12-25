@@ -1,15 +1,16 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useContext, useState} from 'react';
 import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 import IconNotification from '../icons/IconNotification';
 import {COLORS} from '../theme/theme';
 import {SocketContext} from '../context/SocketContext';
 import {RootState} from '../store/store';
 import {unreadedNotificationsFunc} from '../utils/utils';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList, Screen} from '../common/enums';
+import {IAuthUser, IUserChatsResponse} from '../store/app/appReducer';
 
 const Notification = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -44,9 +45,10 @@ const Notification = () => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <TouchableOpacity onPress={handleOpen}>
         <IconNotification fill={COLORS.primaryWhiteHex} />
+
         {unreadedNotifications?.length === 0 ? null : (
           <View style={styles.quantity}>
             <Text style={styles.text}>{unreadedNotifications?.length}</Text>
@@ -56,8 +58,8 @@ const Notification = () => {
       {isOpen ? (
         <View style={styles.notificationsBox}>
           <View style={styles.notifications}>
-            <Text style={styles.text}>Notifications</Text>
-            <Text style={styles.text} onPress={handleMarkAll}>
+            {/* <Text style={styles.text}>Notifications</Text> */}
+            <Text style={[styles.text, styles.btn]} onPress={handleMarkAll}>
               Mark all as read
             </Text>
           </View>
@@ -71,17 +73,15 @@ const Notification = () => {
                   onPress={() => {
                     markNotificationAsRead(
                       n,
-                      userChats,
-                      authUser,
+                      userChats as IUserChatsResponse[],
+                      authUser as IAuthUser,
                       notifications,
                     );
                     setIsOpen(false);
                     navigation.navigate(Screen.UserChat, {});
                   }}
                   key={index}
-                  style={
-                    n.isRead ? null : {backgroundColor: COLORS.primaryRedHex}
-                  }>
+                  style={n.isRead ? styles.readed : styles.notReaded}>
                   <Text
                     style={
                       styles.text
@@ -101,27 +101,41 @@ const Notification = () => {
 export default Notification;
 
 const styles = StyleSheet.create({
+  container: {marginRight: 30},
   notificationsBox: {
     position: 'absolute',
-    width: 190,
+    width: 200,
     top: 30,
-    left: -40,
+    right: -50,
     backgroundColor: COLORS.primaryGreyHex,
     padding: 4,
   },
-  notifications: {
-    flexDirection: 'row',
-  },
+  notifications: {},
   quantity: {
     position: 'absolute',
+    width: 20,
     top: -10,
     left: 10,
     backgroundColor: COLORS.primaryGreenHex,
-    width: 20,
     height: 20,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
   text: {color: COLORS.primaryWhiteHex},
+  btn: {
+    marginLeft: 'auto',
+    borderWidth: 1,
+    borderColor: COLORS.primaryWhiteHex,
+    paddingHorizontal: 4,
+    borderRadius: 2,
+    alignSelf: 'flex-start',
+    marginBottom: 10,
+  },
+  notReaded: {backgroundColor: COLORS.secondaryLightGreyHex, marginBottom: 5},
+  readed: {
+    marginBottom: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.secondaryLightGreyHex,
+  },
 });
