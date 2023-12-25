@@ -10,7 +10,11 @@ import {Socket, io} from 'socket.io-client';
 
 import {RootState, useAppDispatch} from '../store/store';
 import {appActionCreator} from '../store/actions';
-import {INotificationItem} from '../store/app/appReducer';
+import {
+  IAuthUser,
+  INotificationItem,
+  IUserChatsResponse,
+} from '../store/app/appReducer';
 
 interface Props {
   children?: ReactNode;
@@ -25,6 +29,12 @@ export interface ISocketContext {
     date: Date;
   }[];
   markAllNotificationsAsRead: (not: INotificationItem[]) => void;
+  markNotificationAsRead: (
+    n: INotificationItem,
+    userChats: IUserChatsResponse[],
+    user: IAuthUser,
+    notifications: INotificationItem[],
+  ) => void;
 }
 
 export const SocketContext = createContext<ISocketContext>({
@@ -32,6 +42,7 @@ export const SocketContext = createContext<ISocketContext>({
   onlineUsers: [],
   notifications: [],
   markAllNotificationsAsRead: () => {},
+  markNotificationAsRead: () => {},
 });
 
 export const SocketContextProvider = ({children}: Props) => {
@@ -119,6 +130,40 @@ export const SocketContextProvider = ({children}: Props) => {
     [],
   );
 
+  const markNotificationAsRead = useCallback(
+    (
+      n: INotificationItem,
+      userChats: IUserChatsResponse[],
+      user: IAuthUser,
+      notifications: INotificationItem[],
+    ) => {
+      // find chat to open
+
+      const desiredChat = userChats.find(chat => {
+        const chatMembers = [user._id, n.senderId];
+        const isDesiredChat = chat.members.every(member => {
+          return chatMembers.includes(member);
+        });
+        return isDesiredChat;
+      });
+
+      // mark notification as read
+      const mNotifications = notifications.map(el => {
+        if (n.senderId === el.senderId) {
+          return {...n, isRead: true};
+        } else {
+          return el;
+        }
+      });
+
+      if (desiredChat) {
+        dispatch(appActionCreator.setCurrentChat(desiredChat));
+      }
+      setNotifications(mNotifications);
+    },
+    [],
+  );
+
   return (
     <SocketContext.Provider
       value={{
@@ -126,6 +171,7 @@ export const SocketContextProvider = ({children}: Props) => {
         onlineUsers,
         notifications,
         markAllNotificationsAsRead,
+        markNotificationAsRead,
       }}>
       {children}
     </SocketContext.Provider>

@@ -7,13 +7,19 @@ import {COLORS} from '../theme/theme';
 import {SocketContext} from '../context/SocketContext';
 import {RootState} from '../store/store';
 import {unreadedNotificationsFunc} from '../utils/utils';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList, Screen} from '../common/enums';
 
 const Notification = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
   const {authUser, validationError, loading, userChats, users} = useSelector(
     (state: RootState) => state.app,
   );
 
-  const {markAllNotificationsAsRead, notifications} = useContext(SocketContext);
+  const {markAllNotificationsAsRead, markNotificationAsRead, notifications} =
+    useContext(SocketContext);
 
   const [isOpen, setIsOpen] = useState(false);
   const handleOpen = () => {
@@ -61,7 +67,17 @@ const Notification = () => {
           {modifiedNotifications &&
             modifiedNotifications.map((n, index) => {
               return (
-                <View
+                <TouchableOpacity
+                  onPress={() => {
+                    markNotificationAsRead(
+                      n,
+                      userChats,
+                      authUser,
+                      notifications,
+                    );
+                    setIsOpen(false);
+                    navigation.navigate(Screen.UserChat, {});
+                  }}
                   key={index}
                   style={
                     n.isRead ? null : {backgroundColor: COLORS.primaryRedHex}
@@ -74,7 +90,7 @@ const Notification = () => {
                     {' '}
                     {n.date.toString().split('T')[1].slice(0, 5)}
                   </Text>
-                </View>
+                </TouchableOpacity>
               );
             })}
         </View>
