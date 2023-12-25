@@ -1,9 +1,16 @@
-import {ReactNode, createContext, useEffect, useState} from 'react';
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import {useSelector} from 'react-redux';
 import {Socket, io} from 'socket.io-client';
 
 import {RootState, useAppDispatch} from '../store/store';
 import {appActionCreator} from '../store/actions';
+import {INotificationItem} from '../store/app/appReducer';
 
 interface Props {
   children?: ReactNode;
@@ -17,12 +24,14 @@ export interface ISocketContext {
     isRead: boolean;
     date: Date;
   }[];
+  markAllNotificationsAsRead: (not: INotificationItem[]) => void;
 }
 
 export const SocketContext = createContext<ISocketContext>({
   socket: null,
   onlineUsers: [],
   notifications: [],
+  markAllNotificationsAsRead: () => {},
 });
 
 export const SocketContextProvider = ({children}: Props) => {
@@ -100,12 +109,23 @@ export const SocketContextProvider = ({children}: Props) => {
     };
   }, [socket, currentChat]);
 
+  const markAllNotificationsAsRead = useCallback(
+    (notifications: INotificationItem[]) => {
+      const mNotifications = notifications.map(n => {
+        return {...n, isRead: true};
+      });
+      setNotifications(mNotifications);
+    },
+    [],
+  );
+
   return (
     <SocketContext.Provider
       value={{
         socket,
         onlineUsers,
         notifications,
+        markAllNotificationsAsRead,
       }}>
       {children}
     </SocketContext.Provider>

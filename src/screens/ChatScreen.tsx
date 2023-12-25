@@ -34,7 +34,6 @@ const ChatScreen: FC = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
 
-
   const {authUser, validationError, loading, userChats, users} = useSelector(
     (state: RootState) => state.app,
   );
@@ -162,6 +161,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: PADDING_HORIZONTAL,
     backgroundColor: COLORS.primaryBlueHex,
+    zIndex: 2,
   },
 
   logged: {
