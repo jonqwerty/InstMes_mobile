@@ -70,10 +70,12 @@ const UserChat: FC<IUserChatProps> = ({chat, authUser}) => {
       <View style={styles.block}>
         <View style={styles.row}>
           <View style={isOnline ? styles.dot : null} />
-          <Image
-            style={styles.img}
-            source={require('../assets/images/avatar.png')}
-          />
+          <View style={styles.avatarContainer}>
+            <Image
+              style={styles.img}
+              source={require('../assets/images/avatar.png')}
+            />
+          </View>
           <View>
             <Text style={styles.name}>{recipientUser?.name}</Text>
             {latestMessage && <Text>{truncateText(latestMessage?.text)}</Text>}
@@ -110,14 +112,13 @@ const styles = StyleSheet.create({
   block: {flexDirection: 'row', justifyContent: 'space-between'},
   name: {
     fontFamily: FONT_FAMILY.lato_bold,
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryBlackHex,
     lineHeight: 22,
     fontSize: FONT_SIZE.size_20,
   },
   img: {
     height: 45,
     width: 45,
-    marginRight: 16,
   },
   dot: {
     position: 'absolute',
@@ -139,4 +140,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {color: COLORS.primaryWhiteHex},
+  avatarContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: COLORS.primaryWhiteHex,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
 });

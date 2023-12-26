@@ -1,7 +1,9 @@
 import {
   Alert,
   BackHandler,
+  Platform,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -114,37 +116,44 @@ const ChatScreen: FC = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.top}>
-        <Text style={styles.logged}>Logged as {authUser?.name}</Text>
-        <View style={styles.row}>
-          <Notification />
-          <TouchableOpacity onPress={handleLogout}>
-            <IconExit fill={COLORS.primaryWhiteHex} />
-          </TouchableOpacity>
+    <>
+      <StatusBar
+        backgroundColor={COLORS.mainGreyHex}
+        barStyle={Platform.OS === 'ios' ? 'light-content' : 'default'}
+        translucent={Platform.OS === 'ios'}
+      />
+      <View style={styles.container}>
+        <View style={styles.top}>
+          <Text style={styles.logged}>Logged as {authUser?.name}</Text>
+          <View style={styles.row}>
+            <Notification />
+            <TouchableOpacity onPress={handleLogout}>
+              <IconExit fill={COLORS.primaryWhiteHex} />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.mainPart}>
+          <Text style={styles.text}>List of potential users </Text>
+
+          <ScrollView
+            style={styles.containerOfPotentials}
+            contentContainerStyle={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              gap: 10,
+            }}>
+            {potentialUsers?.map((u, index) => {
+              return <PotentialChat key={index} user={u} />;
+            })}
+          </ScrollView>
+
+          <Text style={styles.text}>List of chats</Text>
+          {userChats?.map((chat, index) => {
+            return <UserChat key={index} chat={chat} authUser={authUser} />;
+          })}
         </View>
       </View>
-      <View style={styles.mainPart}>
-        <Text>List of potential users </Text>
-
-        <ScrollView
-          style={styles.containerOfPotentials}
-          contentContainerStyle={{
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            gap: 10,
-          }}>
-          {potentialUsers?.map((u, index) => {
-            return <PotentialChat key={index} user={u} />;
-          })}
-        </ScrollView>
-
-        <Text>List of chats</Text>
-        {userChats?.map((chat, index) => {
-          return <UserChat key={index} chat={chat} authUser={authUser} />;
-        })}
-      </View>
-    </View>
+    </>
   );
 };
 
@@ -154,7 +163,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
 
-    backgroundColor: COLORS.secondPinkHex,
+    backgroundColor: COLORS.greyLight,
   },
   top: {
     height: 50,
@@ -162,7 +171,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: PADDING_HORIZONTAL,
-    backgroundColor: COLORS.primaryBlueHex,
+    backgroundColor: COLORS.mainGreyHex,
     zIndex: 2,
   },
 
@@ -180,4 +189,5 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   row: {flexDirection: 'row', alignItems: 'center'},
+  text: {color: COLORS.primaryBlackHex, marginTop: 4},
 });

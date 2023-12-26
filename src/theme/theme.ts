@@ -65,6 +65,11 @@ interface Color {
   primaryBlueHex: string;
   secondPinkHex: string;
   primaryGreenHex: string;
+
+  mainGreyHex: string;
+  mainCrimson: string;
+  mainCrimsonLite: string;
+  greyLight: string;
 }
 
 export const COLORS: Color = {
@@ -86,6 +91,11 @@ export const COLORS: Color = {
   secondaryLightGreyHex: '#AEAEAE',
   primaryBlackRGBA: 'rgba(12,15,20,0.5)',
   secondaryBlackRGBA: 'rgba(0,0,0,0.7)',
+
+  mainGreyHex: '#343332',
+  mainCrimson: '#F1108A',
+  mainCrimsonLite: '#FF8CCA',
+  greyLight: '#CACACA',
 };
 
 interface FontFamily {

@@ -1,6 +1,8 @@
 import {
   Image,
+  Platform,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -74,46 +76,54 @@ const UserChatScreen: FC = () => {
     navigation.goBack();
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.top}>
-        <View style={styles.row}>
-          <TouchableOpacity style={styles.arrow} onPress={handleGoBack}>
-            <IconLeftArrow fill={COLORS.primaryWhiteHex} />
-          </TouchableOpacity>
-
-          <Image
-            style={styles.img}
-            source={require('../assets/images/avatar.png')}
-          />
-
-          <Text style={styles.name}>{recipientUser?.name}</Text>
-        </View>
-      </View>
-      <ScrollView style={styles.mainPart} ref={scrollRef}>
-        {messages?.map((message, index) => {
-          return (
-            <View
-              key={index}
-              style={
-                message.senderId === authUser?._id
-                  ? styles.recipient
-                  : styles.authUser
-              }>
-              <Text style={styles.text}> {message.text}</Text>
-              <View style={styles.gap}>
-                <Text style={styles.date}>
-                  {new Date(message.createdAt).toLocaleDateString('en-GB')}
-                </Text>
-                <Text style={styles.date}>
-                  {message.createdAt.split('T')[1].slice(0, 5)}
-                </Text>
-              </View>
+    <>
+      <StatusBar
+        backgroundColor={COLORS.mainGreyHex}
+        barStyle={Platform.OS === 'ios' ? 'light-content' : 'default'}
+        translucent={Platform.OS === 'ios'}
+      />
+      <View style={styles.container}>
+        <View style={styles.top}>
+          <View style={styles.row}>
+            <TouchableOpacity style={styles.arrow} onPress={handleGoBack}>
+              <IconLeftArrow fill={COLORS.primaryWhiteHex} />
+            </TouchableOpacity>
+            <View style={styles.avatarContainer}>
+              <Image
+                style={styles.img}
+                source={require('../assets/images/avatar.png')}
+              />
             </View>
-          );
-        })}
-      </ScrollView>
-      <SendTextBlock scrollRef={scrollRef} />
-    </View>
+
+            <Text style={styles.name}>{recipientUser?.name}</Text>
+          </View>
+        </View>
+        <ScrollView style={styles.mainPart} ref={scrollRef}>
+          {messages?.map((message, index) => {
+            return (
+              <View
+                key={index}
+                style={
+                  message.senderId === authUser?._id
+                    ? styles.recipient
+                    : styles.authUser
+                }>
+                <Text style={styles.text}> {message.text}</Text>
+                <View style={styles.gap}>
+                  <Text style={styles.date}>
+                    {new Date(message.createdAt).toLocaleDateString('en-GB')}
+                  </Text>
+                  <Text style={styles.date}>
+                    {message.createdAt.split('T')[1].slice(0, 5)}
+                  </Text>
+                </View>
+              </View>
+            );
+          })}
+        </ScrollView>
+        <SendTextBlock scrollRef={scrollRef} />
+      </View>
+    </>
   );
 };
 
@@ -123,7 +133,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
 
-    backgroundColor: COLORS.secondPinkHex,
+    backgroundColor: COLORS.greyLight,
   },
   top: {
     height: 50,
@@ -131,14 +141,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: PADDING_HORIZONTAL,
-    backgroundColor: COLORS.primaryBlueHex,
+    backgroundColor: COLORS.mainGreyHex,
   },
   row: {flexDirection: 'row', alignItems: 'center'},
   arrow: {marginRight: 15},
   img: {
     height: 35,
     width: 35,
-    marginRight: 10,
   },
 
   name: {
@@ -158,7 +167,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 14,
     maxWidth: '80%',
     alignSelf: 'flex-start',
-    backgroundColor: COLORS.primaryPurpleHex,
+    backgroundColor: COLORS.mainCrimsonLite,
     marginTop: 7,
   },
 
@@ -169,19 +178,19 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 14,
     maxWidth: '80%',
     alignSelf: 'flex-end',
-    backgroundColor: COLORS.primaryBlueHex,
+    backgroundColor: COLORS.mainCrimson,
     marginTop: 7,
   },
 
   text: {
     fontFamily: FONT_FAMILY.lato_bold,
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryBlackHex,
     lineHeight: 16,
     fontSize: FONT_SIZE.size_14,
   },
   date: {
     fontFamily: FONT_FAMILY.lato_bold,
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryBlackHex,
     lineHeight: 16,
     fontSize: FONT_SIZE.size_10,
   },
@@ -189,7 +198,16 @@ const styles = StyleSheet.create({
   gap: {
     marginTop: 10,
     borderTopWidth: 1,
-    borderColor: COLORS.primaryWhiteHex,
+    borderColor: COLORS.primaryBlackHex,
     alignSelf: 'flex-end',
+  },
+  avatarContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: COLORS.primaryWhiteHex,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
   },
 });

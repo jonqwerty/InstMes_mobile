@@ -44,14 +44,14 @@ export default PotentialChat;
 const styles = StyleSheet.create({
   container: {
     marginTop: 5,
-    backgroundColor: COLORS.primaryBlueHex,
+    backgroundColor: COLORS.mainCrimson,
     borderRadius: 4,
     padding: 10,
     alignSelf: 'flex-start',
   },
   text: {
     fontFamily: FONT_FAMILY.lato_bold,
-    color: COLORS.primaryWhiteHex,
+    color: COLORS.primaryBlackHex,
     lineHeight: 16,
     fontSize: FONT_SIZE.size_14,
   },

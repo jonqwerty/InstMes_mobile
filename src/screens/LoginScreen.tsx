@@ -1,6 +1,8 @@
 import React, {FC, useState} from 'react';
 import {
+  Platform,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TextInput,
@@ -45,53 +47,60 @@ const LoginScreen: FC = () => {
   };
 
   return (
-    <LinearGradient
-      colors={[COLORS.primaryPurpleHex, COLORS.primaryPinkHex]}
-      style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scroll}
-        style={styles.wrapper}
-        showsVerticalScrollIndicator={false}>
-        <IconLogoPinkSnail
-          stroke={COLORS.primaryBlackHex}
-          fill={COLORS.primaryPinkHex}
-        />
-
-        <Text style={styles.titleText}>PinkSnail</Text>
-
-        <View style={styles.inputContainer}>
-          <IconEnvelope fill={COLORS.primaryWhiteHex} />
-
-          <TextInput
-            style={styles.input}
-            value={email}
-            onChangeText={text => setEmail(text)}
+    <>
+      <StatusBar
+        backgroundColor={COLORS.mainGreyHex}
+        barStyle={Platform.OS === 'ios' ? 'light-content' : 'default'}
+        translucent={Platform.OS === 'ios'}
+      />
+      <LinearGradient
+        colors={[COLORS.mainGreyHex, COLORS.mainCrimson]}
+        style={styles.container}>
+        <ScrollView
+          contentContainerStyle={styles.scroll}
+          style={styles.wrapper}
+          showsVerticalScrollIndicator={false}>
+          <IconLogoPinkSnail
+            stroke={COLORS.primaryBlackHex}
+            fill={COLORS.primaryPinkHex}
           />
-        </View>
 
-        <View style={styles.inputContainer}>
-          <IconLock fill={COLORS.primaryWhiteHex} />
+          <Text style={styles.titleText}>PinkSnail</Text>
 
-          <TextInput
-            style={styles.input}
-            value={password}
-            onChangeText={text => setPassword(text)}
-          />
-        </View>
+          <View style={styles.inputContainer}>
+            <IconEnvelope fill={COLORS.primaryWhiteHex} />
 
-        <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
-          <Text style={styles.btnText}>Login</Text>
-        </TouchableOpacity>
+            <TextInput
+              style={styles.input}
+              value={email}
+              onChangeText={text => setEmail(text)}
+            />
+          </View>
 
-        <Text style={styles.haveAccountText}>Not a member?</Text>
+          <View style={styles.inputContainer}>
+            <IconLock fill={COLORS.primaryWhiteHex} />
 
-        <TouchableOpacity
-          style={styles.createAccountBtn}
-          onPress={handleCreateAccount}>
-          <Text style={styles.createAccountText}>Create an account</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </LinearGradient>
+            <TextInput
+              style={styles.input}
+              value={password}
+              onChangeText={text => setPassword(text)}
+            />
+          </View>
+
+          <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
+            <Text style={styles.btnText}>Login</Text>
+          </TouchableOpacity>
+
+          <Text style={styles.haveAccountText}>Not a member?</Text>
+
+          <TouchableOpacity
+            style={styles.createAccountBtn}
+            onPress={handleCreateAccount}>
+            <Text style={styles.createAccountText}>Create an account</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </LinearGradient>
+    </>
   );
 };
 
@@ -143,7 +152,7 @@ const styles = StyleSheet.create({
 
   btnText: {
     fontFamily: FONT_FAMILY.lato_bold,
-    color: COLORS.primaryPurpleHex,
+    color: COLORS.primaryBlackHex,
     lineHeight: 26,
     fontSize: FONT_SIZE.size_24,
   },
